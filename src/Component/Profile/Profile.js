@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+
 import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
 
@@ -18,23 +20,12 @@ class Profile extends Component {
                   <div className="ProfileSidebar ProfileSidebar--withLeftAlignment">
                     <div className="ProfileHeaderCard">
                       <h1 className="ProfileHeaderCard-name">
-                        <a href="/NamThan82223837" className="ProfileHeaderCard-nameLink u-textInheritColor js-nav">Nam Thang</a>
+                        <a href="/NamThan82223837" className="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{this.props.coverImageReducer.name}</a>
                       </h1>
-                      <h2 className="ProfileHeaderCard-screenname u-inlineBlock u-dir" dir="ltr">
-                        <a className="ProfileHeaderCard-screennameLink u-linkComplex js-nav" href="/NamThan82223837">
-                          <span className="username u-dir" dir="ltr">@<b className="u-linkComplex-target">NamThan82223837</b></span>
-                        </a>
-                      </h2>
                       <p className="ProfileHeaderCard-bio u-dir" dir="ltr" />
-                      <div className="ProfileHeaderCard-location u-hidden">
-                        <span className="Icon Icon--geo Icon--medium" aria-hidden="true" role="presentation" />
-                        <span className="ProfileHeaderCard-locationText u-dir" dir="ltr">
-                        </span>
-                      </div>
-                      <div className="ProfileHeaderCard-url  u-hidden">
-                        <span className="Icon Icon--url Icon--medium" aria-hidden="true" role="presentation" />
-                        <span className="ProfileHeaderCard-urlText u-dir">
-                        </span>
+                      <div class="ProfileHeaderCard-location">
+                        <span class="Icon Icon--geo Icon--medium" aria-hidden="true" role="presentation"></span>
+                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.coverImageReducer.location}</a></span>
                       </div>
                       <div className="ProfileHeaderCard-joinDate">
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
@@ -44,22 +35,6 @@ class Profile extends Component {
                         <span className="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-birthdateText u-dir" dir="ltr">
                         </span>
-                      </div>
-                    </div>
-                    <div className="PhotoRail" style={{display: 'none'}}>
-                      <div className="PhotoRail-heading">
-                        <span className="Icon Icon--camera Icon--medium" aria-hidden="true" role="presentation" />
-                        <span className="PhotoRail-headingText">
-                          <a href="/NamThan82223837/media" className="PhotoRail-headingWithCount js-nav">
-                            0 Photos and videos
-                          </a>
-                          <a href="/NamThan82223837/media" className="PhotoRail-headingWithoutCount js-nav">
-                            Photos and videos
-                          </a>
-                        </span>
-                      </div>
-                      <div className="PhotoRail-mediaBox">
-                        <span className="js-photoRailInsertPoint" />
                       </div>
                     </div>
                   </div>
@@ -91,33 +66,6 @@ class Profile extends Component {
                       </ul>
                     </div>
                   </div>
-                  <div className="ProfileWarningTimeline" data-element-context="blocked_profile">
-                    <h2 className="ProfileWarningTimeline-heading" id="content-main-heading">You blocked <span className="username u-dir u-textTruncate" dir="ltr">@<b>NamThan82223837</b></span></h2>
-                    <p className="ProfileWarningTimeline-explanation">Are you sure you want to view these Tweets? Viewing Tweets won't unblock <span className="username u-dir u-textTruncate" dir="ltr">@<b>NamThan82223837</b></span></p>
-                    <button className="EdgeButton EdgeButton--tertiary ProfileWarningTimeline-button">Yes, view profile</button>
-                  </div>
-                  <div id="scroll-bump-dialog" className="ScrollBumpDialog modal-container">
-                    <div className="modal draggable">
-                      <div className="modal-content clearfix">
-                        <button type="button" className="modal-btn modal-close js-close">
-                          <span className="Icon Icon--close Icon--medium">
-                            <span className="visuallyhidden">Close</span>
-                          </span>
-                        </button>
-                        <div className="modal-header">
-                          <h3 className="modal-title">
-                            You followed
-                          </h3>
-                        </div>
-                        <div className="modal-body">
-                          <div className="loading">
-                            <span className="spinner-bigger" />
-                          </div>
-                          <ol className="ScrollBumpDialog-usersList clearfix js-users-list" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <div id="timeline" className="ProfileTimeline ">
                     <div className="stream-container  js-request-more-stream-items" data-max-position={1068716577250406401}>
                       <div className="stream-item js-new-items-bar-container">
@@ -127,17 +75,13 @@ class Profile extends Component {
                           <li className="js-stream-item stream-item stream-item
 " data-item-id={1068716577250406401} id="stream-item-tweet-1068716577250406401" data-item-type="tweet" data-suggestion-json="{&quot;suggestion_details&quot;:{},&quot;tweet_ids&quot;:&quot;1068716577250406401&quot;,&quot;scribe_component&quot;:&quot;tweet&quot;}">
                             <div className="tweet js-stream-tweet js-actionable-tweet js-profile-popup-actionable dismissible-content
-       original-tweet js-original-tweet
-      
-      
-       my-tweet 
-" data-tweet-id={1068716577250406401} data-item-id={1068716577250406401} data-permalink-path="/NamThan82223837/status/1068716577250406401" data-conversation-id={1068716577250406401} data-can-be-self-threaded="true" data-tweet-nonce="1068716577250406401-a2709c24-0b93-42ec-93ae-16f316b36a68" data-tweet-stat-initialized="true" data-screen-name="NamThan82223837" data-name="Nam Thang" data-user-id={1068706177666580480} data-you-follow="false" data-follows-you="false" data-you-block="false" data-reply-to-users-json="[{&quot;id_str&quot;:&quot;1068706177666580480&quot;,&quot;screen_name&quot;:&quot;NamThan82223837&quot;,&quot;name&quot;:&quot;Nam Thang&quot;,&quot;emojified_name&quot;:{&quot;text&quot;:&quot;Nam Thang&quot;,&quot;emojified_text_as_html&quot;:&quot;Nam Thang&quot;}}]" data-disclosure-type data-tfb-view="/i/tfb/v1/quick_promote/1068716577250406401">
+       original-tweet js-original-tweet my-tweet " data-tweet-id={1068716577250406401} data-item-id={1068716577250406401} data-permalink-path="/NamThan82223837/status/1068716577250406401" data-conversation-id={1068716577250406401} data-can-be-self-threaded="true" data-tweet-nonce="1068716577250406401-a2709c24-0b93-42ec-93ae-16f316b36a68" data-tweet-stat-initialized="true" data-screen-name="NamThan82223837" data-name="Nam Thang" data-user-id={1068706177666580480} data-you-follow="false" data-follows-you="false" data-you-block="false" data-reply-to-users-json="[{&quot;id_str&quot;:&quot;1068706177666580480&quot;,&quot;screen_name&quot;:&quot;NamThan82223837&quot;,&quot;name&quot;:&quot;Nam Thang&quot;,&quot;emojified_name&quot;:{&quot;text&quot;:&quot;Nam Thang&quot;,&quot;emojified_text_as_html&quot;:&quot;Nam Thang&quot;}}]" data-disclosure-type data-tfb-view="/i/tfb/v1/quick_promote/1068716577250406401">
                               <div className="context">
                               </div>
                               <div className="content">
                                 <div className="stream-item-header">
                                   <a className="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/NamThan82223837" data-user-id={1068706177666580480}>
-                                    <img className="avatar js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt />
+                                    <img className="avatar js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt="test" />
                                     <span className="FullNameGroup">
                                       <strong className="fullname show-popup-with-id u-textTruncate " data-aria-label-part>Nam Thang</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span><span className="username u-dir u-textTruncate" dir="ltr" data-aria-label-part>@<b>NamThan82223837</b></span></a>
                                   <small className="time">
@@ -151,39 +95,6 @@ class Profile extends Component {
                                           <span className="u-hiddenVisually">More</span>
                                         </div>
                                       </button>
-                                      <div className="dropdown-menu is-autoCentered">
-                                        <div className="dropdown-caret">
-                                          <div className="caret-outer" />
-                                          <div className="caret-inner" />
-                                        </div>
-                                        <ul>
-                                          <li className="share-via-dm js-actionShareViaDM" data-nav="share_tweet_dm">
-                                            <button type="button" className="dropdown-link">Share via Direct Message</button>
-                                          </li>
-                                          <li className="copy-link-to-tweet js-actionCopyLinkToTweet">
-                                            <button type="button" className="dropdown-link">Copy link to Tweet</button>
-                                          </li>
-                                          <li className="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
-                                            <button type="button" className="dropdown-link">Embed Tweet</button>
-                                          </li>
-                                          <li className="user-pin-tweet js-actionPinTweet" data-nav="user_pin_tweet">
-                                            <button type="button" className="dropdown-link">Pin to your profile page</button>
-                                          </li>
-                                          <li className="user-unpin-tweet js-actionPinTweet" data-nav="user_unpin_tweet">
-                                            <button type="button" className="dropdown-link">Unpin from profile page</button>
-                                          </li>
-                                          <li className="js-actionDelete">
-                                            <button type="button" className="dropdown-link">Delete Tweet</button>
-                                          </li>
-                                          <li className="dropdown-divider" />
-                                          <li className="js-actionMomentMakerAddTweetToOtherMoment MomentMakerAddTweetToOtherMoment">
-                                            <button type="button" className="dropdown-link">Add to other Moment</button>
-                                          </li>
-                                          <li className="js-actionMomentMakerCreateMoment">
-                                            <button type="button" className="dropdown-link">Add to new Moment</button>
-                                          </li>
-                                        </ul>
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -314,7 +225,7 @@ class Profile extends Component {
                             <div className="stream-end-inner">
                               <h2 className="title">Loading seems to be taking a while.</h2>
                               <p>
-                                Twitter may be over capacity or experiencing a momentary hiccup. <a role="button" href="#" className="try-again-after-whale">Try again</a> or visit <a target="_blank" href="http://status.twitter.com" rel="noopener">Twitter Status</a> for more information.
+                                Twitter may be over capacity or experiencing a momentary hiccup. <a role="button" href="#test" className="try-again-after-whale">Try again</a> or visit <a  href="http://status.twitter.com" rel="noopener">Twitter Status</a> for more information.
                               </p>
                             </div>
                           </div>
@@ -354,7 +265,7 @@ class Profile extends Component {
                                   <div className="flex-module-header">
                                     <h3><span className="trend-location js-trend-location">Trends for you</span></h3>
                                     <span className="middot" aria-hidden="true">·</span>
-                                    <a role="button" href="#" data-modal="change-trends" className="btn-link change-trends js-trend-toggle">
+                                    <a role="button" href="#test" data-modal="change-trends" className="btn-link change-trends js-trend-toggle">
                                       <span aria-hidden="true">Change</span>
                                       <span className="u-hiddenVisually">Change trend settings</span>
                                     </a>
@@ -374,77 +285,6 @@ class Profile extends Component {
                                           <span className="u-linkComplex-target trend-name" dir="ltr">deep royal blue</span>
                                           <div className="js-nav trend-item-context" />
                                           <div className="js-nav trend-item-stats">
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="air jordan 1 retro high" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_country_source:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=%22air%20jordan%201%20retro%20high%22&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">air jordan 1 retro high</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="George H.W. Bush" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_worldwide_source:tweet_count_100000_1000000_metadescription:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=%22George%20H.W.%20Bush%22&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">George H.W. Bush</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                            218K Tweets
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="George Bush" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_worldwide_source:tweet_count_100000_1000000_metadescription:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=%22George%20Bush%22&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">George Bush</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                            314K Tweets
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="President Bush" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_worldwide_source:tweet_count_100000_1000000_metadescription:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=%22President%20Bush%22&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">President Bush</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                            199K Tweets
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="#Teleton2018" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:hashtag_trend:taxi_worldwide_source:tweet_count_10000_100000_metadescription:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/hashtag/Teleton2018?src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">#Teleton2018</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                            43.4K Tweets
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="#AdiósColosal" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:hashtag_trend:taxi_worldwide_source:tweet_count_10000_100000_metadescription:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/hashtag/Adi%C3%B3sColosal?src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">#AdiósColosal</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                            46.3K Tweets
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="Kareem Hunt" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_worldwide_source:tweet_count_100000_1000000_metadescription:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=%22Kareem%20Hunt%22&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">Kareem Hunt</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                            222K Tweets
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="Barbara" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_worldwide_source:tweet_count_10000_100000_metadescription:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=Barbara&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">Barbara</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                            74.6K Tweets
                                           </div>
                                         </a>
                                       </li>
@@ -478,11 +318,15 @@ class Profile extends Component {
           </div>
         </div>
       </div>
-        </div>
-        
-      </div>
+    </div>    
+  </div>
     );
   }
 }
 
-export default Profile;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    coverImageReducer: state.coverImageReducer
+  }
+}
+export default connect(mapStateToProps,null)(Profile);

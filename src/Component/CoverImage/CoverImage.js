@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import {connect} from 'react-redux';
 
+import {OPEN_DIALOG_CONFIG} from '../../Constant/actionTypes';
+import {EDIT_PROFILE} from '../../Constant/actionTypes';
 class CoverImage extends Component {
     render() {
         return (
@@ -38,7 +48,7 @@ class CoverImage extends Component {
                                         <div className="Grid-cell u-size1of3 u-lg-size1of4">
                                             <div className="ProfileCanopy-card" role="presentation" aria-hidden="true">
                                                 <div className="ProfileCardMini">
-                                                    <a className="ProfileCardMini-avatar profile-picture js-tooltip" href="https://abs.twimg.com/sticky/default_profile_images/default_profile_200x200.png" title="Nam Thang" data-resolved-url-large="https://abs.twimg.com/sticky/default_profile_images/default_profile_200x200.png" data-url="https://abs.twimg.com/sticky/default_profile_images/default_profile_200x200.png" target="_blank" rel="noopener" tabIndex={-1}>
+                                                    <a className="ProfileCardMini-avatar profile-picture js-tooltip" href="https://abs.twimg.com/sticky/default_profile_images/default_profile_200x200.png" title="Nam Thang" data-resolved-url-large="https://abs.twimg.com/sticky/default_profile_images/default_profile_200x200.png" data-url="https://abs.twimg.com/sticky/default_profile_images/default_profile_200x200.png"  rel="noopener" tabIndex={-1}>
                                                         <img className="ProfileCardMini-avatarImage" alt="Nam Thang" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png" />
                                                     </a>
                                                     <div className="ProfileCardMini-details">
@@ -61,38 +71,43 @@ class CoverImage extends Component {
                                                 <div className="ProfileNav" role="navigation" data-user-id={1068706177666580480}>
                                                     <ul className="ProfileNav-list">
                                                         <li className="ProfileNav-item ProfileNav-item--tweets is-active">
-                                                            <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav" data-nav="tweets" tabIndex={0} data-original-title="1 Tweet">
+                                                            <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav" data-nav="tweets" tabIndex={0} data-original-title="1 Tweet" href="#test">
                                                                 <span className="ProfileNav-label" aria-hidden="true">Tweets</span>
                                                                 <span className="u-hiddenVisually">Tweets, current page.</span>
-                                                                <span className="ProfileNav-value" data-count={1} data-is-compact="false">1
-                                </span>
+                                                                <span className="ProfileNav-value" data-count={1} data-is-compact="false">1</span>
                                                             </a>
-                                                        </li><li className="ProfileNav-item ProfileNav-item--lists" data-more-item=".ProfileNav-dropdownItem--lists">
+                                                        </li>
+                                                        <li className="ProfileNav-item ProfileNav-item--following" data-more-item=".ProfileNav-dropdownItem--userMoments">
+                                                            <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip  js-nav u-textUserColor" title="0 Moments" data-nav="user_moments" href="/NamThan82223837/moments">
+                                                                <span className="ProfileNav-label" aria-hidden="true">Following</span>
+                                                                <span className="u-hiddenVisually">Following</span>
+                                                                <span className="ProfileNav-value" data-is-compact="false">0</span>
+                                                            </a>
+                                                        </li>
+                                                        <li className="ProfileNav-item ProfileNav-item--following" data-more-item=".ProfileNav-dropdownItem--userMoments">
+                                                            <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip  js-nav u-textUserColor" title="0 Moments" data-nav="user_moments" href="/NamThan82223837/moments">
+                                                                <span className="ProfileNav-label" aria-hidden="true">Followers</span>
+                                                                <span className="u-hiddenVisually">Followers</span>
+                                                                <span className="ProfileNav-value" data-is-compact="false">0</span>
+                                                            </a>
+                                                        </li>
+                                                        <li className="ProfileNav-item ProfileNav-item--lists" data-more-item=".ProfileNav-dropdownItem--lists">
                                                             <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav u-textUserColor" data-nav="all_lists" href="/NamThan82223837/lists" data-original-title="0 Lists">
                                                                 <span className="ProfileNav-label" aria-hidden="true">Lists</span>
                                                                 <span className="u-hiddenVisually">Lists</span>
                                                                 <span className="ProfileNav-value" data-is-compact="false">0</span>
-                                                            </a></li><li className="ProfileNav-item ProfileNav-item--moments" data-more-item=".ProfileNav-dropdownItem--userMoments">
+                                                            </a>
+                                                        </li>
+                                                        <li className="ProfileNav-item ProfileNav-item--moments" data-more-item=".ProfileNav-dropdownItem--userMoments">
                                                             <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip  js-nav u-textUserColor" title="0 Moments" data-nav="user_moments" href="/NamThan82223837/moments">
                                                                 <span className="ProfileNav-label" aria-hidden="true">Moments</span>
                                                                 <span className="u-hiddenVisually">Moments</span>
                                                                 <span className="ProfileNav-value" data-is-compact="false">0</span>
-                                                            </a></li><li className="ProfileNav-item ProfileNav-item--more dropdown is-hidden" style={{}}>        <a className="ProfileNav-stat ProfileNav-stat--link ProfileNav-stat--moreLink js-dropdown-toggle" role="button" href="#more">
-                                                                <span className="ProfileNav-label">&nbsp;</span>
-                                                                <span className="ProfileNav-value">More <span className="ProfileNav-dropdownCaret Icon Icon--medium Icon--caretDown" /></span>
                                                             </a>
-                                                            <div className="dropdown-menu">
-                                                                <div className="dropdown-caret">
-                                                                    <span className="caret-outer" />
-                                                                    <span className="caret-inner" />
-                                                                </div>
-                                                                <ul><li>
-                                                                    <a href="/NamThan82223837/lists" className="ProfileNav-dropdownItem ProfileNav-dropdownItem--lists is-hidden u-bgUserColorHover u-bgUserColorFocus u-linkClean js-nav" style={{}}>Lists</a></li><li>
-                                                                        <a href="/NamThan82223837/moments" className="ProfileNav-dropdownItem ProfileNav-dropdownItem--userMoments is-hidden u-bgUserColorHover u-bgUserColorFocus u-linkClean js-nav" style={{}}>Moments</a></li></ul>
-                                                            </div>
-                                                        </li><li className="ProfileNav-item ProfileNav-item--userActions u-floatRight u-textRight with-rightCaret ">
+                                                        </li>
+                                                        <li className="ProfileNav-item ProfileNav-item--userActions u-floatRight u-textRight with-rightCaret ">
                                                             <div className="UserActions   u-textLeft">
-                                                                <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button">
+                                                                <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button" onClick={this.props.openDialogConfig}>
                                                                     <span className="button-text">Edit profile</span>
                                                                 </button>
                                                                 <div className="ProfilePage-editingButtons">
@@ -112,8 +127,70 @@ class CoverImage extends Component {
                         </div>
                     </div>
                 </div>
+                <Dialog
+                    open={this.props.coverImageReducer.open}
+                    onClose={this.props.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Edit Profile</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            To edit profile , please enter your Name | Bio | Location | Website | Birthday . We will send
+                            updates occasionally.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Name"
+                            fullWidth
+                            onChange={(event)=>this.props.handleInputChangeName(event)}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="location"
+                            label="Location"
+                            fullWidth
+                            onChange={(event)=>this.props.handleInputChangeBio(event)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.props.save} color="primary">
+                            Save
+                        </Button>
+                        <Button onClick={this.props.handleClose} color="primary">
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }
 }
-export default CoverImage;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        coverImageReducer: state.coverImageReducer
+    }
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+    let name = '';
+    let location = '';
+    return {
+        openDialogConfig: () => {
+            dispatch({type:OPEN_DIALOG_CONFIG,open:true})
+        },
+        handleClose:()=>{
+            dispatch({type:OPEN_DIALOG_CONFIG,open:false})
+        },
+        handleInputChangeName:(event)=>{
+            name = event.target.value;
+        },
+        handleInputChangeBio:(event)=>{
+            location = event.target.value;
+        },
+        save: () =>{
+            dispatch({type:EDIT_PROFILE,open:false,name:name,location:location})
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(CoverImage);

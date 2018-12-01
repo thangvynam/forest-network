@@ -32,7 +32,7 @@ class Nav extends Component {
                           </span>
                         </a>
                       </li><li className="dm-nav">
-                        <a role="button" href="#" className="js-tooltip js-dynamic-tooltip global-dm-nav" data-placement="bottom" data-original-title>
+                        <a role="button" href="#test" className="js-tooltip js-dynamic-tooltip global-dm-nav" data-placement="bottom" data-original-title>
                           <span className="Icon Icon--dm Icon--large" />
                           <span className="text">Messages</span>
                           <span className="dm-new"><span className="count-inner" /></span>
@@ -43,7 +43,7 @@ class Nav extends Component {
                     <div role="search">
                       <form className="t1-form form-search js-search-form" action="/search" id="global-nav-search">
                         <label className="visuallyhidden" htmlFor="search-query">Search query</label>
-                        <input className="search-input" type="text" id="search-query" placeholder="Search Twitter" name="q" autoComplete="off" spellCheck="false" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-dropdown-13" />
+                        <input className="search-input" type="text" id="search-query" placeholder="Search Twitter" name="q" autoComplete="off" spellCheck="false" aria-autocomplete="list"  aria-owns="typeahead-dropdown-13" />
                         <span className="search-icon js-search-action">
                           <button type="submit" className="Icon Icon--medium Icon--search nav-search" tabIndex={-1}>
                             <span className="visuallyhidden">Search Twitter</span>
