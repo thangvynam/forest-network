@@ -6,6 +6,7 @@ import DetailTweet from '../DetailTweet/DetailTweet'
 import { OPEN_DIALOG_TWEET } from '../../Constant/actionTypes';
 class Tweets extends Component {
   render() {
+    
     return (
       <div>
         <li onClick={this.props.clickTweets} className="js-stream-item stream-item stream-item" data-item-id={1068716577250406401} id="stream-item-tweet-1068716577250406401" data-item-type="tweet" data-suggestion-json="{&quot;suggestion_details&quot;:{},&quot;tweet_ids&quot;:&quot;1068716577250406401&quot;,&quot;scribe_component&quot;:&quot;tweet&quot;}" >
@@ -63,6 +64,7 @@ class Tweets extends Component {
                       </div>
                       <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero ">
                         <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
+                        {this.props.detailTweetReducer.comment.length}
                       </span>
                     </button>
                   </div>
@@ -74,6 +76,7 @@ class Tweets extends Component {
                       </div>
                       <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero">
                         <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
+                        2
                       </span>
                     </button><button className="ProfileTweet-actionButtonUndo js-actionButton js-actionRetweet" data-modal="ProfileTweet-retweet" type="button">
                       <div className="IconContainer js-tooltip" title="Undo retweet">
@@ -133,14 +136,14 @@ class Tweets extends Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     clickTweets: () => {
-
       dispatch({ type: OPEN_DIALOG_TWEET, open: true })
     }
   }
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    tweetReducer: state.tweetReducer
+    tweetReducer: state.tweetReducer,
+    detailTweetReducer:state.detailTweetReducer
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Tweets);

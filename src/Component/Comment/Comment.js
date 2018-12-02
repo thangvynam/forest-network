@@ -7,17 +7,17 @@ class Comment extends Component {
                 <div className="new_comment">
                     <ul className="user_comment">
                         <div className="user_avatar">
-                            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/73.jpg" />
+                            <img src={this.props.image} />
                         </div>
                         <div className="comment_body">
-                            <p>Gastropub cardigan jean shorts, kogi Godard PBR&amp;B lo-fi locavore. Organic chillwave vinyl Neutra. Bushwick Helvetica cred freegan, crucifix Godard craft beer deep v mixtape cornhole Truffaut master cleanse pour-over Odd Future beard. Portland polaroid iPhone.</p>
+                            <p>{this.props.content}</p>
                         </div>
                         <div className="comment_toolbar">
                             <div className="comment_details">
                                 <ul>
-                                    <li><i className="fa fa-clock-o" /> 13:94</li>
-                                    <li><i className="fa fa-calendar" /> 04/01/2015</li>
-                                    <li><i className="fa fa-pencil" /> <span className="user">John Smith</span></li>
+                                    <li><i className="fa fa-clock-o" /> {this.props.time}</li>
+                                    <li><i className="fa fa-calendar" />{this.props.date}</li>
+                                    <li><i className="fa fa-pencil" /> <span className="user">{this.props.name}</span></li>
                                 </ul>
                             </div>{/* inc. share/reply and love */}<div className="comment_tools">
                                 <ul>

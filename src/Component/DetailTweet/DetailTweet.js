@@ -63,6 +63,7 @@ class DetailTweet extends Component {
                                             </div>
                                             <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero ">
                                                 <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
+                                                {this.props.detailTweetReducer.comment.length}
                                             </span>
                                         </button>
                                     </div>
@@ -117,12 +118,17 @@ class DetailTweet extends Component {
                                 </div>
                                 <hr/>
                                 <div className="comment">
-                                    <div className="row">
-                                       <Comment/>
-                                    </div>
-                                    <div className="row">
-                                        <p>test</p>
-                                    </div>
+                                    {
+                                       this.props.detailTweetReducer.comment.map((element,index)=>(
+                                        <div className="row">
+                                            <Comment    image={element.image}
+                                                        content={element.content}
+                                                        name={element.name}
+                                                        date={element.date}
+                                                        time={element.time} />
+                                        </div>
+                                       )) 
+                                    }
                                 </div>
                             </div>
                             <div className="permalink-footer">
@@ -194,4 +200,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         }
     }
 }
-export default connect(null,mapDispatchToProps)(DetailTweet);
+const mapStateToProps = (state, ownProps) => {
+    return {
+      detailTweetReducer:state.detailTweetReducer
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(DetailTweet);
