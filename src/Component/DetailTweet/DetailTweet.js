@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { OPEN_DIALOG_TWEET } from '../../Constant/actionTypes';
 import Comment from '../Comment/Comment'
 class DetailTweet extends Component {
     render() {
@@ -9,7 +8,7 @@ class DetailTweet extends Component {
             
             <div className="permalink-container permalink-container--withArrows" >
                 <div role="main" className="permalink light-inline-actions stream-uncapped original-permalink-page">
-                        <span class="glyphicon glyphicon-remove" style={{fontSize:"20px",marginLeft: "31em",cursor:"pointer"}} onClick={this.props.handleClose}></span>
+                       
                     <div className="permalink-inner permalink-tweet-container">
                         <div className="tweet permalink-tweet js-actionable-user js-actionable-tweet js-original-tweet my-tweet logged-in no-replies js-initial-focus focus" data-associated-tweet-id={1068905065455316992} data-tweet-id={1068905065455316992} data-item-id={1068905065455316992} data-permalink-path="/NamThan82223837/status/1068905065455316992" data-conversation-id={1068905065455316992} data-can-be-self-threaded="true" data-tweet-nonce="1068905065455316992-adcc55ed-4711-43bf-893c-b5a32b8cfb30" data-tweet-stat-initialized="true" data-screen-name="NamThan82223837" data-name="Nam Thang" data-user-id={1068706177666580480} data-you-follow="false" data-follows-you="false" data-you-block="false" data-reply-to-users-json="[{&quot;id_str&quot;:&quot;1068706177666580480&quot;,&quot;screen_name&quot;:&quot;NamThan82223837&quot;,&quot;name&quot;:&quot;Nam Thang&quot;,&quot;emojified_name&quot;:{&quot;text&quot;:&quot;Nam Thang&quot;,&quot;emojified_text_as_html&quot;:&quot;Nam Thang&quot;}}]" data-disclosure-type data-tfb-view="/i/tfb/v1/quick_promote/1068905065455316992" tabIndex={0}>
                             <div className="content clearfix">
@@ -17,19 +16,19 @@ class DetailTweet extends Component {
                                     <a className="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/NamThan82223837" data-user-id={1068706177666580480}>
                                         <img className="avatar js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt />
                                         <span className="FullNameGroup">
-                                            <strong className="fullname show-popup-with-id u-textTruncate " data-aria-label-part>Nam Thang</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span><span className="username u-dir u-textTruncate" dir="ltr" data-aria-label-part>@<b>NamThan82223837</b></span></a>
+                                            <strong className="fullname show-popup-with-id u-textTruncate " style={{    paddingTop: "10px"}} data-aria-label-part>{this.props.name}</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span></a>
                                     <small className="time">
                                         <a href="/NamThan82223837/status/1068905065455316992" className="tweet-timestamp js-permalink js-nav js-tooltip" title="8:30 AM - 1 Dec 2018" data-conversation-id={1068905065455316992}><span className="_timestamp js-short-timestamp js-relative-timestamp" data-time={1543681801} data-time-ms={1543681801000} data-long-form="true" aria-hidden="true">11h</span><span className="u-hiddenVisually" data-aria-label-part="last">11 hours ago</span></a>
                                     </small>
                                 </div>
                             </div>
                             <div className="js-tweet-text-container">
-                                <p className="TweetTextSize TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>test2</p>
+                                <p className="TweetTextSize TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>{this.props.element.content}</p>
                             </div>
                             <div className="js-tweet-details-fixer tweet-details-fixer">
                                 <div className="client-and-actions">
                                     <span className="metadata">
-                                        <span>8:30 AM - 1 Dec 2018</span>
+                                        <span>{this.props.element.time}</span>
                                     </span>
                                 </div>
                                 <div className="js-machine-translated-tweet-container" />
@@ -63,7 +62,7 @@ class DetailTweet extends Component {
                                             </div>
                                             <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero ">
                                                 <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
-                                                {this.props.detailTweetReducer.comment.length}
+                                                {this.props.element.comment.length}
                                             </span>
                                         </button>
                                     </div>
@@ -119,9 +118,9 @@ class DetailTweet extends Component {
                                 <hr/>
                                 <div className="comment">
                                     {
-                                       this.props.detailTweetReducer.comment.map((element,index)=>(
+                                       this.props.element.comment.map((element,index)=>(
                                         <div className="row">
-                                            <Comment    image={element.image}
+                                            <Comment  key={index}  image={element.image}
                                                         content={element.content}
                                                         name={element.name}
                                                         date={element.date}
@@ -195,9 +194,7 @@ class DetailTweet extends Component {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        handleClose:()=>{
-            dispatch({type:OPEN_DIALOG_TWEET,open:false})
-        }
+        
     }
 }
 const mapStateToProps = (state, ownProps) => {

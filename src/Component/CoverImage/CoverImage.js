@@ -7,9 +7,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import {OPEN_DIALOG_CONFIG} from '../../Constant/actionTypes';
 import {EDIT_PROFILE} from '../../Constant/actionTypes';
+import {EDIT1} from '../../Constant/actionTypes';
 class CoverImage extends Component {
     render() {
         return (
@@ -169,7 +171,7 @@ class CoverImage extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
     return {
-        coverImageReducer: state.coverImageReducer
+        coverImageReducer: state.coverImageReducer,
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -190,6 +192,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         save: () =>{
             dispatch({type:EDIT_PROFILE,open:false,name:name,location:location})
+            
         }
     }
 }

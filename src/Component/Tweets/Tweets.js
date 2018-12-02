@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
 
 import DetailTweet from '../DetailTweet/DetailTweet'
-import { OPEN_DIALOG_TWEET } from '../../Constant/actionTypes';
+
 class Tweets extends Component {
+  state={
+    open:false
+  }
+  clickTweets = event => {
+    this.setState({open:true})
+  };
+  
+  handleClose = event => {
+    this.setState({open:false})
+  };
   render() {
     
     return (
       <div>
-        <li onClick={this.props.clickTweets} className="js-stream-item stream-item stream-item" data-item-id={1068716577250406401} id="stream-item-tweet-1068716577250406401" data-item-type="tweet" data-suggestion-json="{&quot;suggestion_details&quot;:{},&quot;tweet_ids&quot;:&quot;1068716577250406401&quot;,&quot;scribe_component&quot;:&quot;tweet&quot;}" >
+        <li onClick={this.clickTweets} className="js-stream-item stream-item stream-item" data-item-id={1068716577250406401} id="stream-item-tweet-1068716577250406401" data-item-type="tweet" data-suggestion-json="{&quot;suggestion_details&quot;:{},&quot;tweet_ids&quot;:&quot;1068716577250406401&quot;,&quot;scribe_component&quot;:&quot;tweet&quot;}" >
           
           <div className="tweet js-stream-tweet js-actionable-tweet js-profile-popup-actionable dismissible-content original-tweet js-original-tweet my-tweet " data-tweet-id={1068716577250406401} data-item-id={1068716577250406401} data-permalink-path="/NamThan82223837/status/1068716577250406401" data-conversation-id={1068716577250406401} data-can-be-self-threaded="true" data-tweet-nonce="1068716577250406401-a2709c24-0b93-42ec-93ae-16f316b36a68" data-tweet-stat-initialized="true" data-screen-name="NamThan82223837" data-name="Nam Thang" data-user-id={1068706177666580480} data-you-follow="false" data-follows-you="false" data-you-block="false" data-reply-to-users-json="[{&quot;id_str&quot;:&quot;1068706177666580480&quot;,&quot;screen_name&quot;:&quot;NamThan82223837&quot;,&quot;name&quot;:&quot;Nam Thang&quot;,&quot;emojified_name&quot;:{&quot;text&quot;:&quot;Nam Thang&quot;,&quot;emojified_text_as_html&quot;:&quot;Nam Thang&quot;}}]" data-disclosure-type data-tfb-view="/i/tfb/v1/quick_promote/1068716577250406401">
             <div className="context">
@@ -19,9 +31,9 @@ class Tweets extends Component {
                 <a className="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/NamThan82223837" data-user-id={1068706177666580480}>
                   <img className="avatar js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt="test" />
                   <span className="FullNameGroup">
-                    <strong className="fullname show-popup-with-id u-textTruncate " data-aria-label-part>Nam Thang</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span><span className="username u-dir u-textTruncate" dir="ltr" data-aria-label-part>@<b>NamThan82223837</b></span></a>
+                    <strong className="fullname show-popup-with-id u-textTruncate " data-aria-label-part>{this.props.name}</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span><span className="username u-dir u-textTruncate" dir="ltr" data-aria-label-part></span></a>
                 <small className="time">
-                  <a href="/NamThan82223837/status/1068716577250406401" className="tweet-timestamp js-permalink js-nav js-tooltip" data-conversation-id={1068716577250406401} data-original-title="8:01 PM - 30 Nov 2018"><span className="_timestamp js-short-timestamp js-relative-timestamp" data-time={1543636862} data-time-ms={1543636862000} data-long-form="true" aria-hidden="true">3h</span><span className="u-hiddenVisually" data-aria-label-part="last">3 hours ago</span></a>
+                  <a href="/NamThan82223837/status/1068716577250406401" className="tweet-timestamp js-permalink js-nav js-tooltip" data-conversation-id={1068716577250406401} data-original-title="8:01 PM - 30 Nov 2018"><span className="_timestamp js-short-timestamp js-relative-timestamp" data-time={1543636862} data-time-ms={1543636862000} data-long-form="true" aria-hidden="true">{this.props.time}</span><span className="u-hiddenVisually" data-aria-label-part="last">3 hours ago</span></a>
                 </small>
                 <div className="ProfileTweet-action ProfileTweet-action--more js-more-ProfileTweet-actions">
                   <div className="dropdown">
@@ -35,8 +47,9 @@ class Tweets extends Component {
                 </div>
               </div>
               <div className="js-tweet-text-container">
-                <p className="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>Just setting up my Twitter. <a href="/hashtag/myfirstTweet?src=hash" data-query-source="hashtag_click" className="twitter-hashtag pretty-link js-nav" dir="ltr"><s>#</s><b>myfirstTweet</b></a></p>
-              </div>
+                <p className="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>{this.props.content}</p>
+               </div>
+            
               <div className="stream-item-footer">
                 <div className="ProfileTweet-actionCountList u-hiddenVisually">
                   <span className="ProfileTweet-action--reply u-hiddenVisually">
@@ -64,7 +77,7 @@ class Tweets extends Component {
                       </div>
                       <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero ">
                         <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
-                        {this.props.detailTweetReducer.comment.length}
+                        {this.props.element.comment.length}
                       </span>
                     </button>
                   </div>
@@ -76,7 +89,7 @@ class Tweets extends Component {
                       </div>
                       <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero">
                         <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
-                        2
+                        
                       </span>
                     </button><button className="ProfileTweet-actionButtonUndo js-actionButton js-actionRetweet" data-modal="ProfileTweet-retweet" type="button">
                       <div className="IconContainer js-tooltip" title="Undo retweet">
@@ -123,21 +136,30 @@ class Tweets extends Component {
           </div>
         </li>
         <Dialog
-          open={this.props.tweetReducer.open}
+          open={this.state.open}
           aria-labelledby="form-dialog-title"
           maxWidth="50px"
           >
-          <DetailTweet/>
+          <DetailTweet element={this.props.element} name={this.props.name}/>
+          <DialogActions>  
+              <Button onClick={this.handleClose} color="primary">
+                  Cancel
+              </Button>
+          </DialogActions>
         </Dialog>
       </div>
     );
   }
 }
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     clickTweets: () => {
-      dispatch({ type: OPEN_DIALOG_TWEET, open: true })
-    }
+      this.setState({open:true})
+    },
+    handleClose:()=>{
+      this.setState({open:false})
+  }
   }
 }
 const mapStateToProps = (state, ownProps) => {
