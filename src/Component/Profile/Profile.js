@@ -20,12 +20,12 @@ class Profile extends Component {
                   <div className="ProfileSidebar ProfileSidebar--withLeftAlignment">
                     <div className="ProfileHeaderCard">
                       <h1 className="ProfileHeaderCard-name">
-                        <a href="/NamThan82223837" className="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{this.props.coverImageReducer.name}</a>
+                        <a href="/NamThan82223837" className="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{this.props.detailTweetReducer.name}</a>
                       </h1>
                       <p className="ProfileHeaderCard-bio u-dir" dir="ltr" />
                       <div class="ProfileHeaderCard-location">
                         <span class="Icon Icon--geo Icon--medium" aria-hidden="true" role="presentation"></span>
-                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.coverImageReducer.location}</a></span>
+                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.location}</a></span>
                       </div>
                       <div className="ProfileHeaderCard-joinDate">
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
@@ -72,8 +72,12 @@ class Profile extends Component {
                       </div>
                       <div className="stream">
                         <ol className="stream-items js-navigable-stream" id="stream-items-id">
-                          <Tweets/>
-                        
+                          {
+                             this.props.detailTweetReducer.tweet.map((element,index)=>(
+                              <Tweets name={this.props.detailTweetReducer.name} content={element.content} time={element.time} element={element} />
+                             ))
+                          }
+                         
                         </ol>
                         <div className="stream-footer">
                           <div className="timeline-end has-items">
@@ -199,7 +203,8 @@ class Profile extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    coverImageReducer: state.coverImageReducer
+    coverImageReducer: state.coverImageReducer,
+    detailTweetReducer:state.detailTweetReducer
   }
 }
 export default connect(mapStateToProps,null)(Profile);

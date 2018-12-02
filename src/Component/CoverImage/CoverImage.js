@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { OPEN_DIALOG_CONFIG } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWING } from '../../Constant/actionTypes';
 import { EDIT_PROFILE } from '../../Constant/actionTypes';
+
 class CoverImage extends Component {
     render() {
         return (
@@ -328,7 +329,7 @@ class CoverImage extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
     return {
-        coverImageReducer: state.coverImageReducer
+        coverImageReducer: state.coverImageReducer,
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -353,8 +354,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         handleInputChangeBio: (event) => {
             location = event.target.value;
         },
-        save: () => {
-            dispatch({ type: EDIT_PROFILE, open: false, name: name, location: location })
+        save: () =>{
+            dispatch({type:EDIT_PROFILE,open:false,name:name,location:location})
         }
     }
 }
