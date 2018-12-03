@@ -172,7 +172,7 @@ class CoverImage extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
     return {
-        coverImageReducer: state.coverImageReducer
+        coverImageReducer: state.coverImageReducer,
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -197,8 +197,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         handleInputChangeBio: (event) => {
             location = event.target.value;
         },
-        save: () => {
-            dispatch({ type: EDIT_PROFILE, open: false, name: name, location: location })
+        save: () =>{
+            dispatch({type:EDIT_PROFILE,open:false,name:name,location:location})
         }
     }
 }
