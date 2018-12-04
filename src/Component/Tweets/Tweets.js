@@ -143,7 +143,7 @@ class Tweets extends Component {
           <DetailTweet element={this.props.element} name={this.props.name}/>
           <DialogActions>  
               <Button onClick={this.handleClose} color="primary">
-                  Cancel
+                  Close
               </Button>
           </DialogActions>
         </Dialog>
