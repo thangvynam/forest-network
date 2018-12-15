@@ -98,7 +98,6 @@ router.get("/create_account", function (req, res) {
   res.setHeader("Access-Control-Allow-Credentials", true);
   // Pass to next layer of middleware
   res.send("helloworld");
-  
 });
 
 // router.get('/get', function(req, res){

@@ -21,6 +21,7 @@ class Follow extends Component {
                     open={this.props.followReducer.open}
                     onClose={this.props.handleCloseFollowing}
                     aria-labelledby="max-width-dialog-title"
+                    maxWidth="25px"
                 >
                     <DialogTitle id="max-width-dialog-title">Following</DialogTitle>
                     <DialogContent>
@@ -180,6 +181,7 @@ class Follow extends Component {
                     open={this.props.followReducer.openFollower}
                     onClose={this.props.handleCloseFollower}
                     aria-labelledby="max-width-dialog-title"
+                    maxWidth="25px"
                 >
                     <DialogTitle id="max-width-dialog-title">Following</DialogTitle>
                     <DialogContent>
@@ -191,7 +193,7 @@ class Follow extends Component {
                                     </a>
                                     <div class="ProfileCard-content">
                                         <a class="ProfileCard-avatarLink js-nav js-tooltip" href="/TrnNguynHongPh3" tabindex="-1" aria-hidden="true" data-original-title="Trần Nguyễn Hoàng Phúc">
-                                            <img class="ProfileCard-avatarImage js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt=""/>>
+                                            <img class="ProfileCard-avatarImage js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt=""/>
                                         </a>
     
                                         <div class="ProfileCard-actions">

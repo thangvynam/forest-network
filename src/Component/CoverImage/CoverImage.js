@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
 import { connect } from 'react-redux';
 import { OPEN_DIALOG_CONFIG } from '../../Constant/actionTypes';
 import { EDIT_PROFILE } from '../../Constant/actionTypes';
@@ -199,6 +200,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         save: () =>{
             dispatch({type:EDIT_PROFILE,open:false,name:name,location:location})
+            
         }
     }
 }
