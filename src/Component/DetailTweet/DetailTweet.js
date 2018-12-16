@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+
 import Comment from '../Comment/Comment'
 class DetailTweet extends Component {
     checkPayment = () =>{

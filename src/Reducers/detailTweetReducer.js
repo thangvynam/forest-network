@@ -1,10 +1,11 @@
 import {GET_COMMENT} from '../Constant/actionTypes'
 import {EDIT_PROFILE} from '../Constant/actionTypes'
 import {SAVE_TRANSACTION} from '../Constant/actionTypes'
-
+import {ACCOUNT} from '../Constant/Account'
 const detailTweetInitialState = {
-    name : "Thang Vỹ Nam",
+    name : ACCOUNT,
     location : "Unknown",
+    amount : "0",
     tweet : [
         // {
         //     time : "00:44 PM",
@@ -61,8 +62,23 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
             return state.comment
         case EDIT_PROFILE :
             return {...state,name:action.name,location:action.location}
-        case SAVE_TRANSACTION:
-            return {...state,tweet:action.res}
+        case SAVE_TRANSACTION:{
+            let amount = 0;
+            action.res.map((res)=>{
+                if(res.operation == "payment"){
+                    if(res.params.address === ACCOUNT){
+                        amount+= res.params.amount;
+                    }
+                        
+                    if(res.account === ACCOUNT){
+                        amount-= res.params.amount;
+                    }
+                       
+                
+            }})
+            return {...state,tweet:action.res,amount:amount}
+        }
+            
         default:
             return state
     }

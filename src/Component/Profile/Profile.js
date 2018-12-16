@@ -43,6 +43,10 @@ class Profile extends Component {
                         <span class="Icon Icon--geo Icon--medium" aria-hidden="true" role="presentation"></span>
                         <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.location}</a></span>
                       </div>
+                      <div class="ProfileHeaderCard-location">
+                        <span class="fa fa-money"></span>
+                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.amount}</a></span>
+                      </div>
                       <div className="ProfileHeaderCard-joinDate">
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">Joined December 2018</span>
