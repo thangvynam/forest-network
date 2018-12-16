@@ -3,6 +3,11 @@ import { connect } from 'react-redux';
 
 import Comment from '../Comment/Comment'
 class DetailTweet extends Component {
+    checkPayment = () =>{
+        if(this.props.element.operation == "payment"){
+            return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Amount : </b>{this.props.element.params.amount}</p>)
+        }
+    }
     render() {
         return (
             
@@ -16,14 +21,18 @@ class DetailTweet extends Component {
                                     <a className="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/NamThan82223837" data-user-id={1068706177666580480}>
                                         <img className="avatar js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt />
                                         <span className="FullNameGroup">
-                                            <strong className="fullname show-popup-with-id u-textTruncate " style={{    paddingTop: "10px"}} data-aria-label-part>{this.props.name}</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span></a>
+                                            <p className="TweetTextSize TweetTextSize--jumbo js-tweet-text tweet-text fullname show-popup-with-id u-textTruncate " style={{    paddingTop: "10px"}} data-aria-label-part>{this.props.element.operation}</p><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span></a>
                                     <small className="time">
                                         <a href="/NamThan82223837/status/1068905065455316992" className="tweet-timestamp js-permalink js-nav js-tooltip" title="8:30 AM - 1 Dec 2018" data-conversation-id={1068905065455316992}><span className="_timestamp js-short-timestamp js-relative-timestamp" data-time={1543681801} data-time-ms={1543681801000} data-long-form="true" aria-hidden="true">11h</span><span className="u-hiddenVisually" data-aria-label-part="last">11 hours ago</span></a>
                                     </small>
                                 </div>
                             </div>
                             <div className="js-tweet-text-container">
-                                <p className="TweetTextSize TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>{this.props.element.content}</p>
+                                <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>From : </b>{this.props.element.account}</p>
+                                <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>To : </b> {this.props.element.params.address}</p>
+                                {this.checkPayment()}
+                                <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Version : </b> {this.props.element.version}</p>
+                                <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Sequence : </b> {this.props.element.sequence}</p>
                             </div>
                             <div className="js-tweet-details-fixer tweet-details-fixer">
                                 <div className="client-and-actions">
@@ -62,7 +71,7 @@ class DetailTweet extends Component {
                                             </div>
                                             <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero ">
                                                 <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
-                                                {this.props.element.comment.length}
+                                                
                                             </span>
                                         </button>
                                     </div>
@@ -116,7 +125,7 @@ class DetailTweet extends Component {
                                     </div>
                                 </div>
                                 <hr/>
-                                <div className="comment">
+                                {/* <div className="comment">
                                     {
                                        this.props.element.comment.map((element,index)=>(
                                         <div className="row">
@@ -128,7 +137,7 @@ class DetailTweet extends Component {
                                         </div>
                                        )) 
                                     }
-                                </div>
+                                </div> */}
                             </div>
                             <div className="permalink-footer">
                             </div>

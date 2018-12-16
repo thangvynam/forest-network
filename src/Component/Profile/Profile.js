@@ -1,11 +1,27 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
 import Tweets from '../Tweets/Tweets'
+import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+
+
+const getTransaction = () =>
+  axios.get('http://localhost:3001/getdata')
+    .then((res)=> res.data)
+
 class Profile extends Component {
+  componentDidMount(){
+    if(this.props.detailTweetReducer.tweet.length == 0){
+      getTransaction().then((res)=>{
+        this.props.saveTransaction(res)
+      })
+    }
+  }
   render() {
+    getTransaction()
     return (
       <div>
         <Nav />
@@ -74,7 +90,7 @@ class Profile extends Component {
                         <ol className="stream-items js-navigable-stream" id="stream-items-id">
                           {
                              this.props.detailTweetReducer.tweet.map((element,index)=>(
-                              <Tweets name={this.props.detailTweetReducer.name} content={element.content} time={element.time} element={element} />
+                              <Tweets operation={element.operation} version={element.version} sequence={element.sequence} element={element} />
                              ))
                           }
                          
@@ -207,4 +223,12 @@ const mapStateToProps = (state, ownProps) => {
     detailTweetReducer:state.detailTweetReducer
   }
 }
-export default connect(mapStateToProps,null)(Profile);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    saveTransaction: (res) => {
+      console.log(res)
+      dispatch({ type: SAVE_TRANSACTION, res: res })
+    }
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Profile);
