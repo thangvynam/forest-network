@@ -1,11 +1,27 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
 import Tweets from '../Tweets/Tweets'
+import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+
+
+const getTransaction = () =>
+  axios.get('http://localhost:3001/getdata')
+    .then((res)=> res.data)
+
 class Profile extends Component {
+  componentDidMount(){
+    if(this.props.detailTweetReducer.tweet.length == 0){
+      getTransaction().then((res)=>{
+        this.props.saveTransaction(res)
+      })
+    }
+  }
   render() {
+    getTransaction()
     return (
       <div>
         <Nav />
@@ -26,6 +42,10 @@ class Profile extends Component {
                       <div class="ProfileHeaderCard-location">
                         <span class="Icon Icon--geo Icon--medium" aria-hidden="true" role="presentation"></span>
                         <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.location}</a></span>
+                      </div>
+                      <div class="ProfileHeaderCard-location">
+                        <span class="fa fa-money"></span>
+                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.amount}</a></span>
                       </div>
                       <div className="ProfileHeaderCard-joinDate">
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
@@ -74,7 +94,7 @@ class Profile extends Component {
                         <ol className="stream-items js-navigable-stream" id="stream-items-id">
                           {
                              this.props.detailTweetReducer.tweet.map((element,index)=>(
-                              <Tweets name={this.props.detailTweetReducer.name} content={element.content} time={element.time} element={element} />
+                              <Tweets operation={element.operation} version={element.version} sequence={element.sequence} element={element} />
                              ))
                           }
                          
@@ -207,4 +227,12 @@ const mapStateToProps = (state, ownProps) => {
     detailTweetReducer:state.detailTweetReducer
   }
 }
-export default connect(mapStateToProps,null)(Profile);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    saveTransaction: (res) => {
+      console.log(res)
+      dispatch({ type: SAVE_TRANSACTION, res: res })
+    }
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Profile);

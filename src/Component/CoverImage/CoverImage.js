@@ -77,7 +77,7 @@ class CoverImage extends Component {
                                                             <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav" data-nav="tweets" tabIndex={0} data-original-title="1 Tweet" href="#test">
                                                                 <span className="ProfileNav-label" aria-hidden="true">Tweets</span>
                                                                 <span className="u-hiddenVisually">Tweets, current page.</span>
-                                                                <span className="ProfileNav-value" data-count={1} data-is-compact="false">1</span>
+                                                                <span className="ProfileNav-value" data-count={1} data-is-compact="false">{this.props.detailTweetReducer.tweet.length}</span>
                                                             </a>
                                                         </li>
                                                         <li className="ProfileNav-item ProfileNav-item--following" data-more-item=".ProfileNav-dropdownItem--userMoments" onClick={this.props.openDialogFollowing}>
@@ -174,6 +174,7 @@ class CoverImage extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         coverImageReducer: state.coverImageReducer,
+        detailTweetReducer:state.detailTweetReducer
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -200,7 +201,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         save: () =>{
             dispatch({type:EDIT_PROFILE,open:false,name:name,location:location})
-            
         }
     }
 }

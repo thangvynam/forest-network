@@ -16,6 +16,7 @@ router.get("/", function (req, res, next) {
 
 router.get("/getdata", function (req, res, next) {
   var data = [];
+  var result = [];
   axios
     .get(
       "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
@@ -27,30 +28,33 @@ router.get("/getdata", function (req, res, next) {
       data.result.txs.map(tx => {
         let buffer = new Buffer.from(tx.tx, "base64");
         let decodedData = v1.decode(buffer);
-        // console.log(decodedData);
+        result.push(decodedData);
       });
+    })
+    .then(()=>{
+      // Website you wish to allow to connect
+      res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+      // Request methods you wish to allow
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+      );
+      // Request headers you wish to allow
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "X-Requested-With,content-type"
+      );
+      // Set to true if you need the website to include cookies in the requests sent
+      // to the API (e.g. in case you use sessions)
+      res.setHeader("Access-Control-Allow-Credentials", true);
+      // Pass to next layer of middleware
+      res.send(result);
     })
     .catch(function (error) {
       console.log(error);
     });
 
-  // Website you wish to allow to connect
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  // Request methods you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  // Request headers you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  // Pass to next layer of middleware
-  res.send("helloworld");
+  
 });
 
 router.get("/create_key", function (req, res) {

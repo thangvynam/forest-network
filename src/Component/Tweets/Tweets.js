@@ -17,8 +17,21 @@ class Tweets extends Component {
   handleClose = event => {
     this.setState({open:false})
   };
+
+  generateImge = () =>{
+    if(this.props.operation == "create_account"){
+      return (<img className="avatar js-action-profile-avatar" src="https://cdn2.iconfinder.com/data/icons/business-management-19/128/1-36-512.png" alt="test" />)
+    }
+    if(this.props.operation == "payment"){
+      return (<img className="avatar js-action-profile-avatar" src="https://us.123rf.com/450wm/ahasoft2000/ahasoft20001608/ahasoft2000160800944/61236244-payment-icon-glyph-style-is-bicolor-flat-iconic-symbol-with-rounded-angles-eco-green-and-gray-colors.jpg?ver=6" alt="test" />)
+    }
+    if(this.props.operation == "post"){
+      return (<img className="avatar js-action-profile-avatar" src="data:image/png;base64,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" alt="test" />)
+    }
+    return (<img className="avatar js-action-profile-avatar" src="https://img.icons8.com/windows/1600/approve-and-update.png" alt="test" />)
+  }
+
   render() {
-    
     return (
       <div>
         <li onClick={this.clickTweets} className="js-stream-item stream-item stream-item" data-item-id={1068716577250406401} id="stream-item-tweet-1068716577250406401" data-item-type="tweet" data-suggestion-json="{&quot;suggestion_details&quot;:{},&quot;tweet_ids&quot;:&quot;1068716577250406401&quot;,&quot;scribe_component&quot;:&quot;tweet&quot;}" >
@@ -29,11 +42,11 @@ class Tweets extends Component {
             <div className="content">
               <div className="stream-item-header">
                 <a className="account-group js-account-group js-action-profile js-user-profile-link js-nav" href="/NamThan82223837" data-user-id={1068706177666580480}>
-                  <img className="avatar js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt="test" />
+                  {this.generateImge()}
                   <span className="FullNameGroup">
-                    <strong className="fullname show-popup-with-id u-textTruncate " data-aria-label-part>{this.props.name}</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span><span className="username u-dir u-textTruncate" dir="ltr" data-aria-label-part></span></a>
+                    <strong className="fullname show-popup-with-id u-textTruncate " data-aria-label-part>{this.props.operation}</strong><span>‏</span><span className="UserBadges" /><span className="UserNameBreak">&nbsp;</span></span><span className="username u-dir u-textTruncate" dir="ltr" data-aria-label-part></span></a>
                 <small className="time">
-                  <a href="/NamThan82223837/status/1068716577250406401" className="tweet-timestamp js-permalink js-nav js-tooltip" data-conversation-id={1068716577250406401} data-original-title="8:01 PM - 30 Nov 2018"><span className="_timestamp js-short-timestamp js-relative-timestamp" data-time={1543636862} data-time-ms={1543636862000} data-long-form="true" aria-hidden="true">{this.props.time}</span><span className="u-hiddenVisually" data-aria-label-part="last">3 hours ago</span></a>
+                  <a href="/NamThan82223837/status/1068716577250406401" className="tweet-timestamp js-permalink js-nav js-tooltip" data-conversation-id={1068716577250406401} data-original-title="8:01 PM - 30 Nov 2018"><span className="_timestamp js-short-timestamp js-relative-timestamp" data-time={1543636862} data-time-ms={1543636862000} data-long-form="true" aria-hidden="true">Sequence : {this.props.sequence}</span><span className="u-hiddenVisually" data-aria-label-part="last">3 hours ago</span></a>
                 </small>
                 <div className="ProfileTweet-action ProfileTweet-action--more js-more-ProfileTweet-actions">
                   <div className="dropdown">
@@ -47,7 +60,7 @@ class Tweets extends Component {
                 </div>
               </div>
               <div className="js-tweet-text-container">
-                <p className="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>{this.props.content}</p>
+                <p className="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>Version : {this.props.version}</p>
                </div>
             
               <div className="stream-item-footer">
@@ -77,7 +90,7 @@ class Tweets extends Component {
                       </div>
                       <span className="ProfileTweet-actionCount ProfileTweet-actionCount--isZero ">
                         <span className="ProfileTweet-actionCountForPresentation" aria-hidden="true" />
-                        {this.props.element.comment.length}
+                        {/* {this.props.element.comment.length} */}
                       </span>
                     </button>
                   </div>
