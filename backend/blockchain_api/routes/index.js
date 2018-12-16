@@ -69,18 +69,39 @@ router.get("/create_account", function (req, res) {
   const tx = {
     version: 1,
     account: public_key,
-    sequence: 1,
+    sequence: 2,
     memo: Buffer.alloc(0),
     operation: 'create_account',
     params: {
-      address: 'GCO5JO63UQ4WOJULQ7PN33H7K26YW3KJD5OZUGIDJWZMETUX5GI3O2C5'
+      address: 'GCKOCZ5GAALFX2EZQOYOPX3KCMUCEXMEICL2Z4FMNNQB6S4WJQ4OMKVV'
     },
   }
 
   v1.sign(tx, secret_key);
-  console.log(tx)
-  // console.log('0x' + v1.encode(tx).toString('hex'))
+  let txHash = '0x' + v1.encode(tx).toString('hex')
+  axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {
+    console.log(response)
+  })
+  // console.log(txHash)
 
+  
+  // Website you wish to allow to connect
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  // Request methods you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  // Request headers you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  // Pass to next layer of middleware
+  res.send("helloworld");
 });
 
 // router.get('/get', function(req, res){
