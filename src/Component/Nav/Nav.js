@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { OPEN_DIALOG_LOGIN } from '../../Constant/actionTypes';
+import Login from '../Login/Login'
 
 class Nav extends Component {
     render() {
@@ -141,14 +144,36 @@ class Nav extends Component {
                           <span className="text">Tweet</span>
                         </button>
                       </li>
+                      <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
+                        <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip"
+                         data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.openDialogLogin}>
+                          <span className="text">Login</span>
+                        </button>
+                      </li>
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
+            <Login/>
           </div>
         );
     }
 }
 
-export default Nav;
+const mapStateToProps = (state, ownProps) => {
+  return {
+      loginReducer: state.loginReducer,
+  }
+}
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+      openDialogLogin: () => {
+          dispatch({ type: OPEN_DIALOG_LOGIN, openLogin: true })
+      },
+      handleClose: () => {
+          dispatch({ type: OPEN_DIALOG_LOGIN, openLogin: false })
+      }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);
