@@ -183,7 +183,7 @@ class Follow extends Component {
                     aria-labelledby="max-width-dialog-title"
                     maxWidth="25px"
                 >
-                    <DialogTitle id="max-width-dialog-title">Following</DialogTitle>
+                    <DialogTitle id="max-width-dialog-title">Follower</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                         <div class="Grid-cell u-size1of2 u-lg-size1of3 u-mb10" data-test-selector="ProfileTimelineUser" role="presentation">

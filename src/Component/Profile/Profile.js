@@ -4,11 +4,12 @@ import axios from 'axios';
 
 import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
-import CreateAccount from '../CreateAccount/CreateAccount'
+import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount'
 import Tweets from '../Tweets/Tweets'
 import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
-
+import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
+import Dialog_Post from '../Dialog_Post/Dialog_Post';
 const getTransaction = () =>
   axios.get('/getdata')
     .then((res)=> res.data)
@@ -172,6 +173,13 @@ class Profile extends Component {
                                             <span className="text">Create Account</span>
                                           </button>
                                         </li>
+                                        <br/>
+                                        <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
+                                          <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip"
+                                          data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.handleOpenDialog}>
+                                            <span className="text">Post</span>
+                                          </button>
+                                        </li>
                                     </ul>
                                   </div>
                                 </div>
@@ -203,7 +211,8 @@ class Profile extends Component {
         </div>
       </div>
     </div>
-    <CreateAccount/>    
+    <Dialog_CreateAccount/>    
+    <Dialog_Post/>
   </div>
     );
   }
@@ -223,7 +232,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     openDialogCreateAccount : ()=>{
       dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: true })
-  }
+    },
+    handleOpenDialog: () => {
+      dispatch({ type: OPEN_DIALOG_POST, open: true })
+  },
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile);

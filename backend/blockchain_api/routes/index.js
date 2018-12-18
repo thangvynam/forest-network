@@ -41,12 +41,6 @@ router.get("/getdata", function (req, res, next) {
   
 });
 
-router.get("/create_key", function (req, res) {
-  const key = Keypair.random();
-  console.log(key.secret());
-  console.log(key.publicKey());
-})
-
 router.get("/sequence", function (req, res) {
   let public_key = "GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD";
   let data = [];
@@ -134,14 +128,13 @@ router.get("/payment", function (req, res) {
       let txHash = '0x' + v1.encode(tx).toString('hex')
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
-
-  
-  res.send("helloworld");
+  res.send("true");
 });
 
-router.get("/post", function (req, res) {
+router.post("/post", function (req, res) {
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
+  var param=req.body;
   let data = [];
   let count = 0
   const tx = {
@@ -168,15 +161,13 @@ router.get("/post", function (req, res) {
       })
     })
     .then(() => {
-      let postBuf = Buffer.from("test", "utf8");
+      let postBuf = Buffer.from(param.content, "utf8");
       tx.params.content = postBuf
       tx.sequence = count + 1
       v1.sign(tx, secret_key);
       let txHash = '0x' + v1.encode(tx).toString('hex')
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
-
-  
   res.send("helloworld");
 });
 

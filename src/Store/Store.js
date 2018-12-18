@@ -4,6 +4,7 @@ import followReducer from "../Reducers/followReducer"
 import detailTweetReducer from "../Reducers/detailTweetReducer"
 import loginReducer from '../Reducers/loginReducer'
 import createAccountReducer from '../Reducers/createAccountReducer'
+import postReducer from '../Reducers/postReducer'
 var redux = require("redux");
 const allReducers = redux.combineReducers({
     coverImageReducer:coverImageReducer,
@@ -11,7 +12,8 @@ const allReducers = redux.combineReducers({
     followReducer: followReducer,
     detailTweetReducer:detailTweetReducer,
     loginReducer: loginReducer,
-    createAccountReducer:createAccountReducer
+    createAccountReducer:createAccountReducer,
+    postReducer:postReducer
 })
 var store1 = redux.createStore(allReducers);
 export default store1;

@@ -16,9 +16,7 @@ const {
     Keypair
 } = require('stellar-base');
 
-class CreateAccount extends Component {
-
-    
+class Dialog_CreateAccount extends Component {
     render() {
         return (
             <div className="Login">
@@ -122,4 +120,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         // }
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(CreateAccount);
+export default connect(mapStateToProps, mapDispatchToProps)(Dialog_CreateAccount);
