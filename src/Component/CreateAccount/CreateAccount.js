@@ -7,11 +7,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_SHOW_INFO } from '../../Constant/actionTypes';
+import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+const {
+    Keypair
+} = require('stellar-base');
 
 class CreateAccount extends Component {
+
+    
     render() {
         return (
             <div className="Login">
@@ -45,7 +52,7 @@ class CreateAccount extends Component {
                     onClose={this.props.handleClose}
                     aria-labelledby="form-dialog-title"
                 >
-                    <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                    <DialogTitle id="form-dialog-title">Create Account</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Please remember thats public key and secret key
@@ -99,12 +106,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: false })
         },
         generateKey: () => {
-            dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: true, openDialog: false })
+            const key = Keypair.random();
+            const createdPublicKey = key.publicKey();
+            const creadtedSecretKey = key.secret();
+            axios.post('/create_account',{createdPublicKey:createdPublicKey})
+            dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: true, openDialog: false,
+                createdPublicKey:createdPublicKey,creadtedSecretKey:creadtedSecretKey })
         },
         handleClose: () => {
             dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: false })
-        }
-
+        },
+        // getTransaction : () =>{
+        //     axios.get('/getdata')
+        //     .then((res)=> dispatch({ type: SAVE_TRANSACTION, res: res.data }))
+        // }
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CreateAccount);

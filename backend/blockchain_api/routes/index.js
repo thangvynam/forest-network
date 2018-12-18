@@ -32,22 +32,6 @@ router.get("/getdata", function (req, res, next) {
       });
     })
     .then(()=>{
-      // Website you wish to allow to connect
-      res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-      // Request methods you wish to allow
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      );
-      // Request headers you wish to allow
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "X-Requested-With,content-type"
-      );
-      // Set to true if you need the website to include cookies in the requests sent
-      // to the API (e.g. in case you use sessions)
-      res.setHeader("Access-Control-Allow-Credentials", true);
-      // Pass to next layer of middleware
       res.send(result);
     })
     .catch(function (error) {
@@ -77,8 +61,8 @@ router.get("/sequence", function (req, res) {
   })
 
 })
-
-router.get("/create_account", function (req, res) {
+router.post("/create_account", function (req, res) {
+  var param=req.body
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
   let data = [];
@@ -90,7 +74,7 @@ router.get("/create_account", function (req, res) {
     memo: Buffer.alloc(0),
     operation: 'create_account',
     params: {
-      address: 'GAYMLBODPBM5OTMNH3RZ46A2MJGQHWHJZVXXHPFOGTKI2OZQ2DLIMBXH'
+      address: param.createdPublicKey
     },
   }
   axios
@@ -111,17 +95,8 @@ router.get("/create_account", function (req, res) {
       let txHash = '0x' + v1.encode(tx).toString('hex')
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.send("helloworld");
+  
+  res.send("true");
 
 });
 
@@ -160,16 +135,7 @@ router.get("/payment", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
+  
   res.send("helloworld");
 });
 
@@ -210,16 +176,7 @@ router.get("/post", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
+  
   res.send("helloworld");
 });
 
@@ -260,16 +217,7 @@ router.get("/update_name", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
+  
   res.send("helloworld");
 });
 
@@ -310,17 +258,10 @@ router.get("/update_picture", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
+  
   res.send("helloworld");
 });
+
+
 
 module.exports = router;

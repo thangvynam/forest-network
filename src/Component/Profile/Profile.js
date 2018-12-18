@@ -10,7 +10,7 @@ import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 
 const getTransaction = () =>
-  axios.get('http://localhost:3001/getdata')
+  axios.get('/getdata')
     .then((res)=> res.data)
 
 class Profile extends Component {
