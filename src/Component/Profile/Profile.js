@@ -4,9 +4,10 @@ import axios from 'axios';
 
 import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
+import CreateAccount from '../CreateAccount/CreateAccount'
 import Tweets from '../Tweets/Tweets'
 import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
-
+import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 
 const getTransaction = () =>
   axios.get('http://localhost:3001/getdata')
@@ -158,33 +159,19 @@ class Profile extends Component {
                               </div>
                             </div>
                             <div className="module Trends trends">
+                              
                               <div className="trends-inner"><div className="flex-module trends-container context-trends-container">
                                   <div className="flex-module-header">
-                                    <h3><span className="trend-location js-trend-location">Trends for you</span></h3>
-                                    <span className="middot" aria-hidden="true">·</span>
-                                    <a role="button" href="#test" data-modal="change-trends" className="btn-link change-trends js-trend-toggle">
-                                      <span aria-hidden="true">Change</span>
-                                      <span className="u-hiddenVisually">Change trend settings</span>
-                                    </a>
+                                    <h3><span className="trend-location js-trend-location">Actions</span></h3>
                                   </div>
                                   <div className="flex-module-inner">
                                     <ul className="trend-items js-trends">
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="jordan trainer st g" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_country_source:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=%22jordan%20trainer%20st%20g%22&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">jordan trainer st g</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                          </div>
-                                        </a>
-                                      </li>
-                                      <li className="trend-item js-trend-item  context-trend-item" data-trend-name="deep royal blue" data-trends-id={-8792005390795606036} data-trend-token=":tailored_request:entity_trend:taxi_country_source:">
-                                        <a className="pretty-link js-nav js-tooltip u-linkComplex " href="/search?q=%22deep%20royal%20blue%22&src=tren" data-query-source="trend_click">
-                                          <span className="u-linkComplex-target trend-name" dir="ltr">deep royal blue</span>
-                                          <div className="js-nav trend-item-context" />
-                                          <div className="js-nav trend-item-stats">
-                                          </div>
-                                        </a>
-                                      </li>
+                                        <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
+                                          <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip"
+                                          data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.openDialogCreateAccount}>
+                                            <span className="text">Create Account</span>
+                                          </button>
+                                        </li>
                                     </ul>
                                   </div>
                                 </div>
@@ -215,7 +202,8 @@ class Profile extends Component {
           </div>
         </div>
       </div>
-    </div>    
+    </div>
+    <CreateAccount/>    
   </div>
     );
   }
@@ -232,7 +220,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     saveTransaction: (res) => {
       console.log(res)
       dispatch({ type: SAVE_TRANSACTION, res: res })
-    }
+    },
+    openDialogCreateAccount : ()=>{
+      dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: true })
+  }
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile);

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import { OPEN_DIALOG_LOGIN } from '../../Constant/actionTypes';
 import Login from '../Login/Login'
+
 
 class Nav extends Component {
     render() {
@@ -171,9 +173,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       openDialogLogin: () => {
           dispatch({ type: OPEN_DIALOG_LOGIN, openLogin: true })
       },
-      handleClose: () => {
-          dispatch({ type: OPEN_DIALOG_LOGIN, openLogin: false })
-      }
+     
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Nav);

@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-
 import Comment from '../Comment/Comment'
 class DetailTweet extends Component {
-    checkPayment = () =>{
-        if(this.props.element.operation == "payment"){
-            return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Amount : </b>{this.props.element.params.amount}</p>)
-        }
-    }
     render() {
-        return (
-            
+        return (     
             <div className="permalink-container permalink-container--withArrows" >
-                <div role="main" className="permalink light-inline-actions stream-uncapped original-permalink-page">
-                       
+                <div role="main" className="permalink light-inline-actions stream-uncapped original-permalink-page"> 
                     <div className="permalink-inner permalink-tweet-container">
                         <div className="tweet permalink-tweet js-actionable-user js-actionable-tweet js-original-tweet my-tweet logged-in no-replies js-initial-focus focus" data-associated-tweet-id={1068905065455316992} data-tweet-id={1068905065455316992} data-item-id={1068905065455316992} data-permalink-path="/NamThan82223837/status/1068905065455316992" data-conversation-id={1068905065455316992} data-can-be-self-threaded="true" data-tweet-nonce="1068905065455316992-adcc55ed-4711-43bf-893c-b5a32b8cfb30" data-tweet-stat-initialized="true" data-screen-name="NamThan82223837" data-name="Nam Thang" data-user-id={1068706177666580480} data-you-follow="false" data-follows-you="false" data-you-block="false" data-reply-to-users-json="[{&quot;id_str&quot;:&quot;1068706177666580480&quot;,&quot;screen_name&quot;:&quot;NamThan82223837&quot;,&quot;name&quot;:&quot;Nam Thang&quot;,&quot;emojified_name&quot;:{&quot;text&quot;:&quot;Nam Thang&quot;,&quot;emojified_text_as_html&quot;:&quot;Nam Thang&quot;}}]" data-disclosure-type data-tfb-view="/i/tfb/v1/quick_promote/1068905065455316992" tabIndex={0}>
                             <div className="content clearfix">
@@ -30,8 +22,9 @@ class DetailTweet extends Component {
                             </div>
                             <div className="js-tweet-text-container">
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>From : </b>{this.props.element.account}</p>
-                                <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>To : </b> {this.props.element.params.address}</p>
-                                {this.checkPayment()}
+                                {this.props.renderNotPostAndNotUpdate()}
+                                {this.props.checkPayment()}
+                                {this.props.renderPost()}
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Version : </b> {this.props.element.version}</p>
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Sequence : </b> {this.props.element.sequence}</p>
                             </div>
@@ -204,7 +197,24 @@ class DetailTweet extends Component {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        
+        checkPayment : () =>{
+            if(ownProps.element.operation == "payment"){
+                return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Amount : </b>{ownProps.element.params.amount}</p>)
+            }
+        },
+        renderNotPostAndNotUpdate : () =>{
+            if(ownProps.element.operation == "create_account" || ownProps.element.operation == "payment"){
+                return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>To : </b> {ownProps.element.params.address}</p>)
+            }
+        },
+        renderPost : () => {
+            if(ownProps.element.operation == "post" ){
+                let data = ownProps.element.params.content;
+                let buf = Buffer.from(data);
+                let str = buf.toString('utf8');   
+                return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Content : </b> {str}</p>)
+            }
+        }
     }
 }
 const mapStateToProps = (state, ownProps) => {
