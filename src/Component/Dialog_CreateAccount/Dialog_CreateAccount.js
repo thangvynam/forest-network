@@ -95,7 +95,7 @@ class Dialog_CreateAccount extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        createAccountReducer: state.createAccountReducer
+        createAccountReducer: state.createAccountReducer,
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -107,7 +107,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             const key = Keypair.random();
             const createdPublicKey = key.publicKey();
             const creadtedSecretKey = key.secret();
-            axios.post('/create_account',{createdPublicKey:createdPublicKey})
+            axios.post('/create_account',{createdPublicKey:createdPublicKey, 
+                                    public_key: this.props.public_key})
             dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: true, openDialog: false,
                 createdPublicKey:createdPublicKey,creadtedSecretKey:creadtedSecretKey })
         },

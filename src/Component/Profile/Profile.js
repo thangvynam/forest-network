@@ -10,20 +10,21 @@ import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
-const getTransaction = () =>
-  axios.get('/getdata')
-    .then((res)=> res.data)
 
 class Profile extends Component {
+  getTransaction = () =>
+  axios.post('/getdata', {public_key: this.props.public_key})
+    .then((res)=> res.data)
+
   componentDidMount(){
     if(this.props.detailTweetReducer.tweet.length == 0){
-      getTransaction().then((res)=>{
+      this.getTransaction().then((res)=>{
         this.props.saveTransaction(res)
       })
     }
   }
   render() {
-    getTransaction()
+    this.getTransaction()
     return (
       <div>
         <Nav />
@@ -211,7 +212,7 @@ class Profile extends Component {
         </div>
       </div>
     </div>
-    <Dialog_CreateAccount/>    
+    <Dialog_CreateAccount public_key={this.props.public_key}/>    
     <Dialog_Post/>
   </div>
     );

@@ -6,6 +6,9 @@ const {
   Keypair
 } = require('stellar-base');
 
+var isLogin = false;
+var clientPublicKey = "";
+
 /* GET home page. */
 
 router.get("/", function (req, res, next) {
@@ -14,12 +17,12 @@ router.get("/", function (req, res, next) {
   });
 });
 
-router.get("/getdata", function (req, res, next) {
+router.post("/getdata", function (req, res, next) {
   var data = [];
   var result = [];
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+      `https://komodo.forest.network/tx_search?query=%22account=%27${req.body.public_key}%27%22`
     )
     .then(function (response) {
       data = response.data;
@@ -31,34 +34,35 @@ router.get("/getdata", function (req, res, next) {
         result.push(decodedData);
       });
     })
-    .then(()=>{
+    .then(() => {
       res.send(result);
     })
     .catch(function (error) {
       console.log(error);
     });
 
-  
+
 });
 
-router.get("/sequence", function (req, res) {
-  let public_key = "GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD";
-  let data = [];
-  let count = 0;
-  axios.get("https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22").then(response => {
-    data = response.data
-    data.result.txs.map(tx => {
-      let buffer = new Buffer.from(tx.tx, "base64");
-      let decodedData = v1.decode(buffer);
-      if (decodedData.account === public_key) count++;
-    });
-  })
+// router.get("/sequence", function (req, res) {
+//   let public_key = "GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD";
+//   let data = [];
+//   let count = 0;
+//   axios.get("https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22").then(response => {
+//     data = response.data
+//     data.result.txs.map(tx => {
+//       let buffer = new Buffer.from(tx.tx, "base64");
+//       let decodedData = v1.decode(buffer);
+//       if (decodedData.account === public_key) count++;
+//     });
+//   })
 
-})
+// })
+
 router.post("/create_account", function (req, res) {
-  var param=req.body
-  const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
-  const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
+  var param = req.body
+  console.log(req.body);
+  
   let data = [];
   let count = 0
   const tx = {
@@ -71,25 +75,25 @@ router.post("/create_account", function (req, res) {
       address: param.createdPublicKey
     },
   }
-  axios
-    .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
-    )
-    .then(function (response) {
-      data = response.data;
-      data.result.txs.map(tx => {
-        let buffer = new Buffer.from(tx.tx, "base64");
-        let decodedData = v1.decode(buffer);
-        if (decodedData.account === public_key) count++;
-      })
-    })
-    .then(() => {
-      tx.sequence = count + 1;
-      v1.sign(tx, secret_key);
-      let txHash = '0x' + v1.encode(tx).toString('hex')
-      axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
-    })
-  
+  // axios
+  //   .get(
+  //     "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+  //   )
+  //   .then(function (response) {
+  //     data = response.data;
+  //     data.result.txs.map(tx => {
+  //       let buffer = new Buffer.from(tx.tx, "base64");
+  //       let decodedData = v1.decode(buffer);
+  //       if (decodedData.account === public_key) count++;
+  //     })
+  //   })
+  //   .then(() => {
+  //     tx.sequence = count + 1;
+  //     v1.sign(tx, secret_key);
+  //     let txHash = '0x' + v1.encode(tx).toString('hex')
+  //     axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+  //   })
+
   res.send("true");
 
 });
@@ -134,7 +138,7 @@ router.get("/payment", function (req, res) {
 router.post("/post", function (req, res) {
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
-  var param=req.body;
+  var param = req.body;
   let data = [];
   let count = 0
   const tx = {
@@ -208,7 +212,7 @@ router.get("/update_name", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  
+
   res.send("helloworld");
 });
 
@@ -241,7 +245,7 @@ router.get("/update_picture", function (req, res) {
       })
     })
     .then(() => {
-      let updateBuf = Buffer.from("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100101011111111111111111111111111111111111111000111111111111111111111111111111111011000011111111111111111111111111111111100101100111111111111111111111111111111100010010001111111111111111111111111111111111111111111111111111111111111111111111111110111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "utf8");
+      let updateBuf = Buffer.from("", "utf8");
       tx.sequence = count + 1
       tx.params.value = updateBuf
       v1.sign(tx, secret_key);
@@ -249,10 +253,19 @@ router.get("/update_picture", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  
+
   res.send("helloworld");
 });
 
+router.post('/login', function (req, res, next) {
+  isLogin = req.body.isLogin;
+  clientPublicKey = req.body.public_key
+  res.send("true")
+})
+
+router.get('/login', function (req, res, next) {
+  res.send({isLogin, clientPublicKey})
+})
 
 
 module.exports = router;
