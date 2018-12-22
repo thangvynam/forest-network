@@ -8,10 +8,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { connect } from 'react-redux';
 import axios from 'axios';
-
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_SHOW_INFO } from '../../Constant/actionTypes';
 import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+
+import {sign, encode, decode} from "../../Control/v1.js";
+const base32 = require('base32.js');
 const {
     Keypair
 } = require('stellar-base');
@@ -108,7 +110,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             const createdPublicKey = key.publicKey();
             const creadtedSecretKey = key.secret();
             axios.post('/create_account',{createdPublicKey:createdPublicKey, 
-                                    public_key: this.props.public_key})
+                                    public_key: ownProps.public_key}).then(res => {
+                                        console.log(Buffer.from(base32.decode(res.data.account)));
+                                        // loi buffer.from
+                // sign(res.data, sessionStorage.getItem("secret_key"));
+                // let txHash = '0x' + encode(res.data).toString('hex')
+                // axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})                                      
+                                    })
             dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: true, openDialog: false,
                 createdPublicKey:createdPublicKey,creadtedSecretKey:creadtedSecretKey })
         },

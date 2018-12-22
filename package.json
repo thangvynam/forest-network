@@ -14,7 +14,8 @@
     "react-scripts": "2.1.1",
     "reactstrap": "^6.5.0",
     "redux": "^4.0.1",
-    "stellar-base": "^0.10.0"
+    "stellar-base": "^0.10.0",
+    "varstruct": "^6.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

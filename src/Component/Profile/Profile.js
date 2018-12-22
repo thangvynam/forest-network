@@ -212,7 +212,8 @@ class Profile extends Component {
         </div>
       </div>
     </div>
-    <Dialog_CreateAccount public_key={this.props.public_key}/>    
+    <Dialog_CreateAccount public_key={this.props.public_key}
+                          secret_key={this.props.secret_key}/>    
     <Dialog_Post/>
   </div>
     );

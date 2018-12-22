@@ -35,6 +35,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       try {
         const key = Keypair.fromSecret(secret_key)
         const public_key = key.publicKey()
+        sessionStorage.setItem('secret_key', secret_key)
         axios.post('/login', {isLogin: true, public_key})
              .then((res)=> {
                console.log(res);               
