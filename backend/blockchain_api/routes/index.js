@@ -73,7 +73,7 @@ router.post("/create_account", function (req, res) {
       })
     })
     .then(() => {
-      console.log(Buffer.from(base32.decode(tx.account)));
+      console.log(base32.decode(tx.account));
       tx.sequence = count + 1;
       res.send(tx);
     })
@@ -157,6 +157,27 @@ router.post("/post", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
   res.send("helloworld");
+});
+
+router.post("/get_content", function (req, res) {
+  var param = req.body;
+  let data = [];
+  axios
+    .get(
+      `https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`
+    )
+    .then(function (response) {
+      data = response.data;
+      data.result.txs.map(tx => {
+        let buffer = new Buffer.from(tx.tx, "base64");
+        let decodedData = v1.decode(buffer);
+        if (decodedData.sequence === param.sequence){
+          let result = v1.PlainTextContent.decode(decodedData.params.content)
+          res.send(result.text);
+        }
+      })
+    })
+    // res.send(null);
 });
 
 router.get("/update_name", function (req, res) {
