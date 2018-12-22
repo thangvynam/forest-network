@@ -158,7 +158,7 @@ router.post("/post", function (req, res) {
       let txHash = '0x' + v1.encode(tx).toString('hex')
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
-  res.send("helloworld");
+  res.send("true");
 });
 
 router.post("/get_content", function (req, res) {
@@ -185,6 +185,7 @@ router.post("/get_content", function (req, res) {
 router.get("/update_name", function (req, res) {
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
+  var param = req.body;
   let data = [];
   let count = 0
   const tx = {
@@ -211,7 +212,7 @@ router.get("/update_name", function (req, res) {
       })
     })
     .then(() => {
-      let updateBuf = Buffer.from("Hoang Phuc", "utf8");
+      let updateBuf = Buffer.from(param.name, "utf8");
       tx.sequence = count + 1
       tx.params.value = updateBuf
       v1.sign(tx, secret_key);
@@ -220,7 +221,7 @@ router.get("/update_name", function (req, res) {
     })
 
 
-  res.send("helloworld");
+  res.send("true");
 });
 
 router.get("/update_picture", function (req, res) {
