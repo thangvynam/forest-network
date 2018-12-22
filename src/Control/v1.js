@@ -172,9 +172,11 @@ function sign(tx, secret) {
   tx.signature = key.sign(getUnsignedHash(tx));
 }
 
-module.exports = {
-  encode,
-  decode,
-  sign,
-  PlainTextContent
-};
+// module.exports = {
+//   encode,
+//   decode,
+//   sign,
+//   PlainTextContent
+// };
+
+export {sign, encode, decode, PlainTextContent}

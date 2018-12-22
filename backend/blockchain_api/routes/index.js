@@ -2,9 +2,13 @@ var express = require("express");
 var axios = require("axios");
 var router = express.Router();
 const v1 = require("./v1");
+const base32 = require('base32.js');
 const {
   Keypair
 } = require('stellar-base');
+
+var isLogin = false;
+var clientPublicKey = "";
 
 /* GET home page. */
 
@@ -14,12 +18,12 @@ router.get("/", function (req, res, next) {
   });
 });
 
-router.get("/getdata", function (req, res, next) {
+router.post("/getdata", function (req, res, next) {
   var data = [];
   var result = [];
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+      `https://komodo.forest.network/tx_search?query=%22account=%27${req.body.public_key}%27%22&per_page=100`
     )
     .then(function (response) {
       data = response.data;
@@ -31,39 +35,24 @@ router.get("/getdata", function (req, res, next) {
         result.push(decodedData);
       });
     })
-    .then(()=>{
+    .then(() => {
       res.send(result.reverse());
     })
     .catch(function (error) {
       console.log(error);
     });
 
-  
+
 });
 
-router.get("/sequence", function (req, res) {
-  let public_key = "GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD";
-  let data = [];
-  let count = 0;
-  axios.get("https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22").then(response => {
-    data = response.data
-    data.result.txs.map(tx => {
-      let buffer = new Buffer.from(tx.tx, "base64");
-      let decodedData = v1.decode(buffer);
-      if (decodedData.account === public_key) count++;
-    });
-  })
-
-})
 router.post("/create_account", function (req, res) {
-  var param=req.body
-  const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
-  const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
+  var param = req.body
+  
   let data = [];
   let count = 0
   const tx = {
     version: 1,
-    account: public_key,
+    account: param.public_key,
     sequence: 0,
     memo: Buffer.alloc(0),
     operation: 'create_account',
@@ -73,24 +62,23 @@ router.post("/create_account", function (req, res) {
   }
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+      `https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`
     )
     .then(function (response) {
       data = response.data;
       data.result.txs.map(tx => {
         let buffer = new Buffer.from(tx.tx, "base64");
         let decodedData = v1.decode(buffer);
-        if (decodedData.account === public_key) count++;
+        if (decodedData.account === param.public_key) count++;
       })
     })
     .then(() => {
+      console.log(Buffer.from(base32.decode(tx.account)));
       tx.sequence = count + 1;
-      v1.sign(tx, secret_key);
-      let txHash = '0x' + v1.encode(tx).toString('hex')
-      axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+      res.send(tx);
     })
+
   
-  res.send("true");
 
 });
 
@@ -114,7 +102,7 @@ router.post("/payment", function (req, res) {
   }
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22&per_page=100"
     )
     .then(function (response) {
       data = response.data;
@@ -136,8 +124,7 @@ router.post("/payment", function (req, res) {
 router.post("/post", function (req, res) {
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
-  var param=req.body;
-  var content = param.content
+  var param = req.body;
   let data = [];
   let count = 0
   const tx = {
@@ -153,7 +140,7 @@ router.post("/post", function (req, res) {
   }
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22&per_page=100"
     )
     .then(function (response) {
       data = response.data;
@@ -164,8 +151,8 @@ router.post("/post", function (req, res) {
       })
     })
     .then(() => {
-      let postBuf = Buffer.from(param.content, "utf8");
-      tx.params.content = postBuf
+      var text = {type: 1, text: param.content}
+      tx.params.content = v1.PlainTextContent.encode(text)
       tx.sequence = count + 1
       v1.sign(tx, secret_key);
       let txHash = '0x' + v1.encode(tx).toString('hex')
@@ -192,7 +179,7 @@ router.get("/update_name", function (req, res) {
   }
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22&per_page=100"
     )
     .then(function (response) {
       data = response.data;
@@ -211,7 +198,7 @@ router.get("/update_name", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  
+
   res.send("helloworld");
 });
 
@@ -233,7 +220,7 @@ router.get("/update_picture", function (req, res) {
   }
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22"
+      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22&per_page=100"
     )
     .then(function (response) {
       data = response.data;
@@ -244,7 +231,7 @@ router.get("/update_picture", function (req, res) {
       })
     })
     .then(() => {
-      let updateBuf = Buffer.from("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100101011111111111111111111111111111111111111000111111111111111111111111111111111011000011111111111111111111111111111111100101100111111111111111111111111111111100010010001111111111111111111111111111111111111111111111111111111111111111111111111110111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "utf8");
+      let updateBuf = Buffer.from("", "utf8");
       tx.sequence = count + 1
       tx.params.value = updateBuf
       v1.sign(tx, secret_key);
@@ -252,10 +239,19 @@ router.get("/update_picture", function (req, res) {
       axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     })
 
-  
+
   res.send("helloworld");
 });
 
+router.post('/login', function (req, res, next) {
+  isLogin = req.body.isLogin;
+  clientPublicKey = req.body.public_key
+  res.send("true")
+})
+
+router.get('/login', function (req, res, next) {
+  res.send({isLogin, clientPublicKey})
+})
 
 
 module.exports = router;
