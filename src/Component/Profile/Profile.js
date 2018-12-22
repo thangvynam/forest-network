@@ -4,11 +4,12 @@ import axios from 'axios';
 
 import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
-import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount'
-import Tweets from '../Tweets/Tweets'
+import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
+import Tweets from '../Tweets/Tweets';
 import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_PAYMENT} from '../../Constant/actionTypes';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
 
 class Profile extends Component {
@@ -177,8 +178,15 @@ class Profile extends Component {
                                         <br/>
                                         <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
                                           <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip"
-                                          data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.handleOpenDialog}>
+                                          data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.handleOpenDialogPost}>
                                             <span className="text">Post</span>
+                                          </button>
+                                        </li>
+                                        <br/>
+                                        <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
+                                          <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip"
+                                          data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.handleOpenDialogPayment}>
+                                            <span className="text">Pay</span>
                                           </button>
                                         </li>
                                     </ul>
@@ -215,6 +223,7 @@ class Profile extends Component {
     <Dialog_CreateAccount public_key={this.props.public_key}
                           secret_key={this.props.secret_key}/>    
     <Dialog_Post/>
+    <Dialog_Payment/>
   </div>
     );
   }
@@ -235,9 +244,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     openDialogCreateAccount : ()=>{
       dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: true })
     },
-    handleOpenDialog: () => {
+    handleOpenDialogPost: () => {
       dispatch({ type: OPEN_DIALOG_POST, open: true })
-  },
+    },
+    handleOpenDialogPayment: () => {
+      dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
+    },
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile);
