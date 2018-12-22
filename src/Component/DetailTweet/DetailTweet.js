@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import Comment from '../Comment/Comment'
+import axios from 'axios';
 class DetailTweet extends Component {
     render() {
         return (     
@@ -209,10 +209,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         renderPost : () => {
             if(ownProps.element.operation == "post" ){
-                let data = ownProps.element.params.content;
-                let buf = Buffer.from(data);
-                let str = buf.toString('utf8');   
-                return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Content : </b> {str}</p>)
+                var str = ""
+                axios.post('/get_content',{public_key:ownProps.element.account, 
+                    sequence: ownProps.element.sequence}).then(res => {
+                        var temp = res.data;  
+                        str = temp     
+                    })
+                    console.log(str);                  
+                    return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Content : </b> {temp}</p>)        
             }
         }
     }
