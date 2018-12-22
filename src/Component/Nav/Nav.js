@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import { CHECK_LOGIN } from '../../Constant/actionTypes';
-
+import { DO_LOGIN } from '../../Constant/actionTypes';
 class Nav extends Component {
     render() {
         return (
@@ -150,6 +151,12 @@ class Nav extends Component {
                           <span className="text">Login</span>
                         </button>
                       </li>
+                      <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
+                        <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip"
+                         data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.signOut}>
+                          <span className="text">Sign out</span>
+                        </button>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -170,6 +177,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       openDialogLogin: () => {
           dispatch({ type: CHECK_LOGIN, openLogin: true })
       },
+      signOut:() =>{
+        axios.post('/login', { isLogin: false })
+        dispatch({ type: DO_LOGIN, isLogin: false })
+      }
      
   }
 }

@@ -10,8 +10,10 @@ const loginReducer = (state = loginInitialState, action) => {
     switch (action.type) {
             case CHECK_LOGIN:
             return {...state, openLogin:action.openLogin};
-            case DO_LOGIN:
+            case DO_LOGIN:{
                 return {...state, isLogin: action.isLogin, public_key: action.public_key, secret_key: action.secret_key}
+            }
+                
         default:
             return state
     }
