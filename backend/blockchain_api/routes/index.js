@@ -82,11 +82,13 @@ router.post("/create_account", function (req, res) {
 
 });
 
-router.get("/payment", function (req, res) {
+router.post("/payment", function (req, res) {
+  var param=req.body
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
   let data = [];
   let count = 0
+  console.log(param.amount)
   const tx = {
     version: 1,
     account: public_key,
@@ -94,8 +96,8 @@ router.get("/payment", function (req, res) {
     memo: Buffer.alloc(0),
     operation: 'payment',
     params: {
-      address: 'GAYMLBODPBM5OTMNH3RZ46A2MJGQHWHJZVXXHPFOGTKI2OZQ2DLIMBXH',
-      amount: 1000
+      address: param.address,
+      amount: parseInt(param.amount)
     },
   }
   axios
