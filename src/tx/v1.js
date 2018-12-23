@@ -1,7 +1,6 @@
 const vstruct = require('varstruct');
 const base32 = require('base32.js');
 const { Keypair } = require('stellar-base');
-const crypto = require('crypto');
 
 const Transaction = vstruct([
   { name: 'version', type: vstruct.UInt8 },
@@ -43,15 +42,6 @@ const InteractParams = vstruct([
   // Depend on object on parent object keys. First 16 bytes of content are nonce/iv
   { name: 'content', type: vstruct.VarBuffer(vstruct.UInt16BE) },
   // React if '', like, love, haha, anrgy, sad, wow
-]);
-
-const PlainTextContent = vstruct([
-  { name: 'type', type: vstruct.UInt8 },
-  { name: 'text', type: vstruct.VarString(vstruct.UInt16BE) },
-]);
-
-const Followings = vstruct([
-  { name: 'addresses', type: vstruct.VarArray(vstruct.UInt16BE, vstruct.Buffer(35)) },
 ]);
 
 function encode(tx) {
@@ -176,10 +166,8 @@ function sign(tx, secret) {
   tx.signature = key.sign(getUnsignedHash(tx));
 }
 
-module.exports = {
+export{
   encode,
   decode,
   sign,
-  PlainTextContent,
-  Followings
 };
