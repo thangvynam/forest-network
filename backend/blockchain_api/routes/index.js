@@ -56,6 +56,7 @@ router.post("/broadcast", function (req, res) {
 })
 
 router.post("/create_account", function (req, res) {
+  console.log("vao roi ")
   var param = req.body
 
   let data = [];
