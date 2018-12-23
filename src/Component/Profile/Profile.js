@@ -11,6 +11,7 @@ import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_PAYMENT} from '../../Constant/actionTypes';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
+import Dialog_Payment from '../Dialog_Payment/Dialog_Payment'
 
 class Profile extends Component {
   getTransaction = () =>

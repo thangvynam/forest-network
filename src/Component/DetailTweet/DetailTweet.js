@@ -216,7 +216,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                         str = temp     
                     })
                     console.log(str);                  
-                    return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Content : </b> {temp}</p>)        
+                    return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Content : </b> {str}</p>)        
             }
         }
     }
