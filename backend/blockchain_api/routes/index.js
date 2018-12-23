@@ -201,7 +201,7 @@ router.post("/get_content", function (req, res) {
   // res.send(null);
 });
 
-router.get("/update_name", function (req, res) {
+router.post("/update_name", function (req, res) {
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
   var param = req.body;
@@ -277,8 +277,14 @@ router.get("/update_picture", function (req, res) {
         tx.sequence = count + 1
         tx.params.value = data
         v1.sign(tx, secret_key);
-        let txHash = '0x' + v1.encode(tx).toString('hex')
-        axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+        let txHash = v1.encode(tx).toString('base64')
+        // console.log(txHash);
+        axios.post("https://komodo.forest.network/", {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "broadcast_tx_commit",
+          "params": [`${txHash}`]
+        })
       });
     })
 
