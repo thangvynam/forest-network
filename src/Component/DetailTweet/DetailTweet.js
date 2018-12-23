@@ -3,6 +3,23 @@ import { connect } from 'react-redux';
 import Comment from '../Comment/Comment'
 import axios from 'axios';
 class DetailTweet extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            content : ''
+        };
+        this.renderPost = this.renderPost.bind(this);
+    }
+    renderPost() {
+       
+        if(this.props.element.operation == "post" ){
+            axios.post('/get_content',{public_key:this.props.element.account, sequence: this.props.element.sequence}
+                ).then(res => {
+                    this.setState({content:res.data});
+                })                    
+        }
+      
+    }
     render() {
         return (     
             <div className="permalink-container permalink-container--withArrows" >
@@ -24,9 +41,12 @@ class DetailTweet extends Component {
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>From : </b>{this.props.element.account}</p>
                                 {this.props.renderNotPostAndNotUpdate()}
                                 {this.props.checkPayment()}
-                                {this.props.renderPost()}
+                                {this.renderPost()}
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Version : </b> {this.props.element.version}</p>
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Sequence : </b> {this.props.element.sequence}</p>
+                                <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>
+                                    <b>{this.state.content == '' ? '':'Content :'  }</b> {this.state.content}
+                                </p>
                             </div>
                             <div className="js-tweet-details-fixer tweet-details-fixer">
                                 <div className="client-and-actions">
@@ -206,19 +226,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             if(ownProps.element.operation == "create_account" || ownProps.element.operation == "payment"){
                 return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>To : </b> {ownProps.element.params.address}</p>)
             }
-        },
-        renderPost : () => {
-            if(ownProps.element.operation == "post" ){
-                var str = ""
-                axios.post('/get_content',{public_key:ownProps.element.account, 
-                    sequence: ownProps.element.sequence}).then(res => {
-                        var temp = res.data;  
-                        str = temp     
-                    })
-                    console.log(str);                  
-                    return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Content : </b> {str}</p>)        
-            }
         }
+        
     }
 }
 const mapStateToProps = (state, ownProps) => {

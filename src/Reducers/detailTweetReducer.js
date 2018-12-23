@@ -4,7 +4,6 @@ import {SAVE_TRANSACTION} from '../Constant/actionTypes'
 import {ACCOUNT} from '../Constant/Account'
 const detailTweetInitialState = {
     name : '',
-    location : "Unknown",
     amount : "0",
     tweet : [
         // {
@@ -64,6 +63,7 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
         case SAVE_TRANSACTION:{
             let amount = 0;
             let str = '';
+            let first = 0;
             action.res.map((res)=>{
                 if(res.operation == "payment"){
                     if(res.params.address === ACCOUNT){
@@ -73,15 +73,15 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
                         amount-= res.params.amount;
                     }
                 }
-                if(res.operation === "update_account" && res.params.key === "name"){
+                if(first === 0 && res.operation === "update_account" && res.params.key === "name"){
                     let data = res.params.value;
                     let buf = Buffer.from(data);
-                    str = buf.toString('utf8');            
+                    str = buf.toString('utf8');      
+                    first++;      
                 }
         })
             return {...state,tweet:action.res,amount:amount,name:str}
         }
-            
         default:
             return state
     }

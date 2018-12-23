@@ -19,7 +19,7 @@ class App extends Component {
              .then((res)=> {
                console.log(res)
                if(res.data.isLogin)
-               this.props.login(res.data)               
+                this.props.login(res.data)               
              })
   }
 }

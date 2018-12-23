@@ -6,13 +6,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import axios from 'axios';
 import { connect } from 'react-redux';
+
 import { OPEN_DIALOG_CONFIG } from '../../Constant/actionTypes';
 import { EDIT_PROFILE } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWING } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWER } from '../../Constant/actionTypes';
 import Follow from '../Follow/Follow';
+
 class CoverImage extends Component {
     render() {
         return (
@@ -138,7 +140,7 @@ class CoverImage extends Component {
                     <DialogTitle id="form-dialog-title">Edit Profile</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            To edit profile , please enter your Name | Bio | Location | Website | Birthday . We will send
+                            To edit profile , please enter your Name . We will send
                             updates occasionally.
                         </DialogContentText>
                         <TextField
@@ -149,13 +151,7 @@ class CoverImage extends Component {
                             fullWidth
                             onChange={(event) => this.props.handleInputChangeName(event)}
                         />
-                        <TextField
-                            margin="dense"
-                            id="location"
-                            label="Location"
-                            fullWidth
-                            onChange={(event) => this.props.handleInputChangeBio(event)}
-                        />
+                      
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.props.save} color="primary">
@@ -179,7 +175,6 @@ const mapStateToProps = (state, ownProps) => {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
     let name = '';
-    let location = '';
     return {
         openDialogConfig: () => {
             dispatch({ type: OPEN_DIALOG_CONFIG, open: true })
@@ -196,11 +191,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         handleInputChangeName: (event) => {
             name = event.target.value;
         },
-        handleInputChangeBio: (event) => {
-            location = event.target.value;
-        },
         save: () =>{
-            dispatch({type:EDIT_PROFILE,open:false,name:name,location:location})
+            axios.post('/update_name',{name:name})
+            dispatch({type:EDIT_PROFILE,name:name})
         }
     }
 }
