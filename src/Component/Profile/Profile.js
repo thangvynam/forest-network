@@ -45,8 +45,8 @@ class Profile extends Component {
                       </h1>
                       <p className="ProfileHeaderCard-bio u-dir" dir="ltr" />
                       <div class="ProfileHeaderCard-location">
-                        <span class="Icon Icon--geo Icon--medium" aria-hidden="true" role="presentation"></span>
-                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.location}</a></span>
+                        <span aria-hidden="true" role="presentation">Sequence : </span>
+                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.sequence}</a></span>
                       </div>
                       <div class="ProfileHeaderCard-location">
                         <span class="fa fa-money"></span>

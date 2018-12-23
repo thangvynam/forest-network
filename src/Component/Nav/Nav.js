@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
 
-import { CHECK_LOGIN } from '../../Constant/actionTypes';
 import { DO_LOGIN } from '../../Constant/actionTypes';
 class Nav extends Component {
     render() {
@@ -17,20 +17,19 @@ class Nav extends Component {
                   </h1><div className="pushstate-spinner" />
                   <div role="navigation" style={{display: 'inline-block'}}><ul className="nav js-global-actions" id="global-actions"><li id="global-nav-home" className="home" data-global-action="home">
                         <a className="js-nav js-tooltip js-dynamic-tooltip" data-placement="bottom" href="/" data-component-context="home_nav" data-nav="home" data-original-title>
-                          <span className="Icon Icon--home Icon--large" />
-                          <span className="Icon Icon--homeFilled Icon--large u-textUserColor" />
-                          <span className="text" aria-hidden="true">Home</span>
-                          <span className="u-hiddenVisually a11y-inactive-page-text">Home</span>
-                          <span className="u-hiddenVisually a11y-active-page-text">Home, current page.</span>
-                          <span className="u-hiddenVisually hidden-new-items-text">New Tweets available.</span>
+                            <span className="Icon Icon--home Icon--large" />
+                            <span className="Icon Icon--homeFilled Icon--large u-textUserColor" />
+                            <span className="text" aria-hidden="true">
+                              <NavLink className="text" to="/home"/> Home
+                            </span>
+                         
                         </a>
                       </li><li className="people notifications" data-global-action="connect">
                         <a className="js-nav js-tooltip js-dynamic-tooltip" data-placement="bottom" href="/i/notifications" data-component-context="connect_nav" data-nav="connect" data-original-title>
                           <span className="Icon Icon--notifications Icon--large" />
                           <span className="Icon Icon--notificationsFilled Icon--large u-textUserColor" />
                           <span className="text" aria-hidden="true">Notifications</span>
-                          <span className="u-hiddenVisually a11y-inactive-page-text">Notifications</span>
-                          <span className="u-hiddenVisually a11y-active-page-text">Notifications, current page.</span>
+                          
                           <span className="count">
                             <span className="count-inner">0</span>
                           </span>
@@ -142,13 +141,7 @@ class Nav extends Component {
                       </li>
                       <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
                         <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip" data-placement="bottom" data-component-context="new_tweet_button" data-original-title>
-                          <span className="text">Tweet</span>
-                        </button>
-                      </li>
-                      <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
-                        <button id="global-new-tweet-button" className="js-global-new-tweet js-tooltip EdgeButton EdgeButton--primary js-dynamic-tooltip"
-                         data-placement="bottom" data-component-context="new_tweet_button" data-original-title  onClick={this.props.openDialogLogin}>
-                          <span className="text">Login</span>
+                          <NavLink className="text" to="/profile">Profile</NavLink>
                         </button>
                       </li>
                       <li role="complementary" aria-labelledby="global-new-tweet-button" className="topbar-tweet-btn">
@@ -174,10 +167,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-      openDialogLogin: () => {
-          dispatch({ type: CHECK_LOGIN, openLogin: true })
-      },
       signOut:() =>{
+        sessionStorage.removeItem('secret_key')
         axios.post('/login', { isLogin: false })
         dispatch({ type: DO_LOGIN, isLogin: false })
       }
