@@ -1,10 +1,12 @@
 import {GET_COMMENT} from '../Constant/actionTypes'
 import {EDIT_PROFILE} from '../Constant/actionTypes'
-import {SAVE_TRANSACTION} from '../Constant/actionTypes'
+import {SAVE_TRANSACTION, STORE_BANDWIDTH} from '../Constant/actionTypes'
 import {ACCOUNT} from '../Constant/Account'
 const detailTweetInitialState = {
     name : '',
     amount : "0",
+    sequence : '0',
+    bandwidth: '0',
     tweet : [
         // {
         //     time : "00:44 PM",
@@ -56,6 +58,8 @@ const detailTweetInitialState = {
 }
 const detailTweetReducer = (state = detailTweetInitialState, action) => {
     switch (action.type) {
+        case STORE_BANDWIDTH:
+            return {...state, bandwidth: action.bandwidth}
         case GET_COMMENT:
             return state.comment
         case EDIT_PROFILE :
@@ -63,7 +67,9 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
         case SAVE_TRANSACTION:{
             let amount = 0;
             let str = '';
-            let first = 0;
+            let firstName = 0;
+            let firstSequence = 0;
+            let sequence = 0;
             action.res.map((res)=>{
                 if(res.operation == "payment"){
                     if(res.params.address === ACCOUNT){
@@ -73,14 +79,21 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
                         amount-= res.params.amount;
                     }
                 }
-                if(first === 0 && res.operation === "update_account" && res.params.key === "name"){
+                if(firstName === 0 && res.operation === "update_account" && res.params.key === "name"){
+                   
                     let data = res.params.value;
                     let buf = Buffer.from(data);
                     str = buf.toString('utf8');      
-                    first++;      
+                    firstName++;   
                 }
-        })
-            return {...state,tweet:action.res,amount:amount,name:str}
+                if(firstSequence === 0){
+                    sequence = res.sequence;
+                    firstSequence++;
+                }
+            })
+               
+            
+            return {...state,tweet:action.res,amount:amount,name:str,sequence:sequence}
         }
         default:
             return state

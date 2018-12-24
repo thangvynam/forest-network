@@ -12,10 +12,8 @@ import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_SHOW_INFO } from '../../Constant/actionTypes';
 import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
 import * as transaction from "../../tx"
-import {signTx} from "./sign"
-const {
-    Keypair
-} = require('stellar-base');
+var Buffer = require('buffer/').Buffer
+const {Keypair} = require('stellar-base');
 
 class Dialog_CreateAccount extends Component {
     render() {
@@ -109,13 +107,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             const createdPublicKey = key.publicKey();
             const creadtedSecretKey = key.secret();
             const secret_key = sessionStorage.getItem("secret_key")
-            axios.post('/create_account',{createdPublicKey:createdPublicKey, 
-                                    public_key: ownProps.public_key}).then(res => {
-                                        let tx = res.data.tx
-                                        // signTx(tx, secret_key)                                      
-                                        // transaction.sign(tx, secret_key) 
-                                        console.log(window.forestNetwork);
-                                                                                                                                               
+            const public_key = Keypair.fromSecret(secret_key).publicKey();     
+            axios.post('/create_account',{public_key, createdPublicKey}).then(res => {
+                                        let tx = res.data
+                                        tx.memo = Buffer.alloc(0)
+                                        tx.signature = Buffer.alloc(64, 0)
+                                        transaction.sign(tx, secret_key) 
+                                        let txHash = '0x' + transaction.encode(tx).toString('hex')
+                                        axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})                                                                                           
                                     })
             dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: true, openDialog: false,
                 createdPublicKey:createdPublicKey,creadtedSecretKey:creadtedSecretKey })

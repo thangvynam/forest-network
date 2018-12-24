@@ -1,100 +1,88 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
+import { SAVE_TRANSACTION ,DO_LOGIN} from '../../Constant/actionTypes';
 import Nav from '../Nav/Nav';
-import CoverImage from '../CoverImage/CoverImage';
 import Tweets from '../Tweets/Tweets';
-import {SAVE_TRANSACTION, STORE_BANDWIDTH} from '../../Constant/actionTypes';
-import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
-import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
-import { OPEN_DIALOG_PAYMENT,DO_LOGIN} from '../../Constant/actionTypes';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
 import Dialog_Payment from '../Dialog_Payment/Dialog_Payment';
 import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 
-class Profile extends Component {
-  getTransaction = () =>
-    axios.post('/getdata', { public_key: this.props.loginReducer.public_key })
-    .then((res) => res.data)
+class NewsFeed extends Component {
+    constructor(props) {
+        super(props);
+    }
+    getTransaction = () =>
+        axios.post('/getdata', { public_key: this.props.loginReducer.public_key })
+            .then((res) => res.data)
 
-  componentDidMount(){
+    componentDidMount() {
+        axios.get('/login')
+             .then((res)=> {
+               if(res.data.isLogin){
+                    this.props.login(res.data)         
+              }})
 
-     axios.get('/login')
-          .then((res)=> {
-            if(res.data.isLogin){
-                this.props.login(res.data)         
-            }})
-          .then(()=>{
-            if(this.props.detailTweetReducer.tweet.length == 0){
-              this.getTransaction().then((res)=>{
-                this.props.saveTransaction(res)
-              })
+        if(this.props.loginReducer.isLogin){
+            if (this.props.detailTweetReducer.tweet.length == 0) {
+                this.getTransaction().then((res) => {
+                    this.props.saveTransaction(res)
+                })
             }
-          })
-  }
-  render() {
-    if(this.props.loginReducer.isLogin === false){
-      return (<Redirect to="/login"/>)
-  }
-    this.getTransaction()
-    return (
-      <div>
-        <Nav />
-        <CoverImage public_key={this.props.public_key}/>
-        <div style={{marginTop:"50px"}}>
-        <div className="AppContainer">
-        <div  role="main" aria-labelledby="content-main-heading">
-          <div className="Grid Grid--withGutter">
-            <div className="Grid-cell u-size1of3 u-lg-size1of4">
-              <div className="Grid Grid--withGutter">
-                <div className="Grid-cell">
-                  <div className="ProfileSidebar ProfileSidebar--withLeftAlignment">
-                    <div className="ProfileHeaderCard">
-                      <h1 className="ProfileHeaderCard-name">
-                        <a href="/NamThan82223837" className="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{this.props.detailTweetReducer.name}</a>
-                      </h1>
-                      <p className="ProfileHeaderCard-bio u-dir" dir="ltr" />
-                      <div class="ProfileHeaderCard-location">
-                        <span aria-hidden="true" role="presentation">Sequence : </span>
-                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.sequence}</a></span>
-                      </div>
-                      <div class="ProfileHeaderCard-location">
-                        <span class="fa fa-money"></span>
-                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.amount}</a></span>
-                      </div>
-                      <div className="ProfileHeaderCard-joinDate">
-                        <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
-                        <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">Joined December 2018</span>
-                      </div>
-                      <div className="ProfileHeaderCard-joinDate">
-                        <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
-                        <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">{this.props.detailTweetReducer.bandwidth} OXY</span>
-                      </div>
-                      <div className="fileinput fileinput-new" data-provides="fileinput">
-                    
-                    <div className="fileinput-preview fileinput-exists thumbnail" style={{ maxWidth: 200, maxHeight: 150 }} />
-                    <div>
-                        <span className="btn btn-default btn-file" style={{ cursor: "pointer" }} >
-                            <i className="fa fa-file-image-o" ><span className="fileinput-new"></span></i>
-                            <span className="fileinput-exists">Change</span>
-                            <input type="file" />
-                        </span>
-                        <a href="#" className="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+        }
+    }
+    render() {
+        if(this.props.loginReducer.isLogin === false){
+            return (<Redirect to="/login"/>)
+        }
+        this.getTransaction()
+        return (
+            <div>
+                <Nav />
+                <div className="dashboard dashboard-left" style={{ marginLeft: "14px" }}>
+                    <div className="DashboardProfileCard  module">
+                        <a className="DashboardProfileCard-bg u-bgUserColor u-block" tabIndex={-1} aria-hidden="true" rel="noopener">
+                        </a>
+                        <div className="DashboardProfileCard-content">
+                            <div className="DashboardProfileCard-avatarContainer">
+                                <div id="choose-photo" className="controls avatar-settings inline-upload-avatar dropdown center">
+                                    <a className="DashboardProfileCard-avatarLink ProfileAvatar-placeholder u-inlineBlock js-nav js-tooltip profile-picture js-dropdown-toggle" href="/NamThan82223837" tabIndex={-1} aria-hidden="true" data-placement="top" data-scribe-element="profile_avatar" role="button" aria-haspopup="true" data-original-title="Add a profile photo">
+                                        <img className="DashboardProfileCard-avatarImage js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt />
+                                    </a>
+                                </div>
+                            </div>
+                            <div className="DashboardProfileCard-userFields account-group">
+                                <div className="DashboardProfileCard-name u-textTruncate">
+                                    <a className="u-textInheritColor js-nav" rel="noopener">{this.props.detailTweetReducer.name}</a><span className="UserBadges" />
+                                </div>
+                            </div>
+                            <div className="ProfileCardStats">
+                                <ul className="ProfileCardStats-statList Arrange Arrange--bottom Arrange--equal"><li className="ProfileCardStats-stat Arrange-sizeFit">
+                                    <a className="ProfileCardStats-statLink u-textUserColor u-linkClean u-block js-nav js-tooltip" href="/NamThan82223837" data-element-term="tweet_stats" data-original-title="3 Tweets">
+                                        <span className="ProfileCardStats-statLabel u-block">Tweets</span>
+                                        <span className="ProfileCardStats-statValue" data-count={3} data-is-compact="false">
+                                            {this.props.detailTweetReducer.tweet.length}
+                                        </span>
+                                    </a>
+                                </li><li className="ProfileCardStats-stat Arrange-sizeFit">
+                                        <a className="ProfileCardStats-statLink u-textUserColor u-linkClean u-block js-nav js-tooltip" href="/NamThan82223837/following" data-element-term="following_stats" data-original-title="1 Following">
+                                            <span className="ProfileCardStats-statLabel u-block">Following</span>
+                                            <span className="ProfileCardStats-statValue" data-count={1} data-is-compact="false">1</span>
+                                        </a>
+                                    </li><li className="ProfileCardStats-stat Arrange-sizeFit">
+                                        <a className="ProfileCardStats-statLink u-textUserColor u-linkClean u-block js-nav js-tooltip" href="/NamThan82223837/followers" data-element-term="follower_stats" data-original-title="1 Follower">
+                                            <span className="ProfileCardStats-statLabel u-block">Followers</span>
+                                            <span className="ProfileCardStats-statValue" data-count={1} data-is-compact="false">1</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                      <div className="ProfileHeaderCard-birthdate u-hidden">
-                        <span className="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation" />
-                        <span className="ProfileHeaderCard-birthdateText u-dir" dir="ltr">
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="Grid-cell u-size2of3 u-lg-size3of4">
+                <div className="Grid-cell u-size2of3 u-lg-size3of4">
               <div className="Grid Grid--withGutter">
                 <div className="Grid-cell">
                   <div className="js-profileClusterFollow" />
@@ -245,50 +233,30 @@ class Profile extends Component {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <Dialog_CreateAccount public_key={this.props.loginReducer.public_key}
+            <Dialog_CreateAccount public_key={this.props.loginReducer.public_key}
                           secret_key={this.props.loginReducer.secret_key}/>    
     <Dialog_Post/>
     <Dialog_Payment/>
-  </div>
-    );
-  }
-}
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    coverImageReducer: state.coverImageReducer,
-    detailTweetReducer:state.detailTweetReducer,
-    loginReducer:state.loginReducer
-  }
+            </div>
+        );
+    }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    saveTransaction: (res) => {
-      console.log(res)
-      dispatch({ type: SAVE_TRANSACTION, res: res })
-    },
-    openDialogCreateAccount : ()=>{
-      dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: true })
-    },
-    handleOpenDialogPost: () => {
-      dispatch({ type: OPEN_DIALOG_POST, open: true })
-    },
-    handleOpenDialogPayment: () => {
-      dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
-    },
-
-    saveBandwidth: (bandwidth) => {
-      dispatch({type: STORE_BANDWIDTH, bandwidth})
-    },
-    login: (res) => {
-      console.log(res);
-      dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
-  }
-
-  }
+    return {
+        saveTransaction: (res) => {
+            console.log(res)
+            dispatch({ type: SAVE_TRANSACTION, res: res })
+        },
+        login: (res) => {
+            console.log(res);
+            dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
+        }
+    }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Profile);
+const mapStateToProps = (state, ownProps) => {
+    return {
+        detailTweetReducer: state.detailTweetReducer,
+        loginReducer: state.loginReducer
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(NewsFeed);
