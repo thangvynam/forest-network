@@ -42,7 +42,7 @@ class Profile extends Component {
     return (
       <div>
         <Nav />
-        <CoverImage/>
+        <CoverImage public_key={this.props.public_key}/>
         <div style={{marginTop:"50px"}}>
         <div className="AppContainer">
         <div  role="main" aria-labelledby="content-main-heading">
