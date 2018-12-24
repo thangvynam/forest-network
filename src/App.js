@@ -12,46 +12,12 @@ class App extends Component {
 
   render() {
     return (
-      // this.props.loginReducer.isLogin ? <Profile public_key={this.props.loginReducer.public_key}
-      //                                            secret_key={this.props.loginReducer.secret_key}/> : <Login/>
       <Router>
-        <div>
-        
-        { 
-          this.props.loginReducer.isLogin ? 
-            <div>
-              <NewsFeed public_key={this.props.loginReducer.public_key}
-                        secret_key={this.props.loginReducer.secret_key}  />
-               <BasicRouter/>
-            </div> :
-           <Login/>
-           }
-        </div>
+        <BasicRouter/>
       </Router>
-      
     );
-  }
-  componentDidMount(){
-    axios.get('/login')
-             .then((res)=> {
-               console.log(res)
-               if(res.data.isLogin)
-                this.props.login(res.data)               
-             })
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-      loginReducer: state.loginReducer,
-  }
-}
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    login: (res) => {
-      console.log(res);
-      dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
-    }
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+export default (App);
