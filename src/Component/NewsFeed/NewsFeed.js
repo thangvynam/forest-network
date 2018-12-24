@@ -3,7 +3,10 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
-import { SAVE_TRANSACTION ,DO_LOGIN} from '../../Constant/actionTypes';
+import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
+import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_PAYMENT,DO_LOGIN} from '../../Constant/actionTypes';
 import Nav from '../Nav/Nav';
 import Tweets from '../Tweets/Tweets';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
@@ -41,6 +44,7 @@ class NewsFeed extends Component {
         return (
             <div>
                 <Nav />
+                
                 <div className="dashboard dashboard-left" style={{ marginLeft: "14px" }}>
                     <div className="DashboardProfileCard  module">
                         <a className="DashboardProfileCard-bg u-bgUserColor u-block" tabIndex={-1} aria-hidden="true" rel="noopener">
@@ -235,8 +239,8 @@ class NewsFeed extends Component {
             </div>
             <Dialog_CreateAccount public_key={this.props.loginReducer.public_key}
                           secret_key={this.props.loginReducer.secret_key}/>    
-    <Dialog_Post/>
-    <Dialog_Payment/>
+            <Dialog_Post/>
+            <Dialog_Payment/>
             </div>
         );
     }
@@ -246,6 +250,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         saveTransaction: (res) => {
             console.log(res)
             dispatch({ type: SAVE_TRANSACTION, res: res })
+        },
+        openDialogCreateAccount : ()=>{
+          dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: true })
+        },
+        handleOpenDialogPost: () => {
+          dispatch({ type: OPEN_DIALOG_POST, open: true })
+        },
+        handleOpenDialogPayment: () => {
+          dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
         },
         login: (res) => {
             console.log(res);

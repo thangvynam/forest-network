@@ -112,10 +112,23 @@ class CoverImage extends Component {
                                                                 <span className="ProfileNav-value" data-is-compact="false">0</span>
                                                             </a>
                                                         </li>
-                                                        <li className="ProfileNav-item ProfileNav-item--userActions u-floatRight u-textRight with-rightCaret ">
+                                                        <li className="ProfileNav-item  u-textRight with-rightCaret " style={{marginLeft:"15em"}} >
                                                             <div className="UserActions   u-textLeft">
                                                                 <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button" onClick={this.props.openDialogConfig}>
                                                                     <span className="button-text">Edit profile</span>
+                                                                </button>
+                                                                <div className="ProfilePage-editingButtons">
+                                                                    <button className="ProfilePage-cancelButton EdgeButton EdgeButton--tertiary" data-scribe-element="cancel_button" tabIndex={4}>Cancel</button>
+                                                                    <span className="ProfilePage-savingIndicator"><span className="spinner-small" />Saving...</span>
+                                                                    <button className="ProfilePage-saveButton EdgeButton EdgeButton--secondary" tabIndex={3}>Save changes</button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <li className="ProfileNav-item  u-textRight with-rightCaret " >
+                                                            <div className="UserActions   u-textLeft">
+                                                                <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button" onClick={this.props.openDialogConfig}>
+                                                                    <span className="button-text">Edit profile 2</span>
                                                                 </button>
                                                                 <div className="ProfilePage-editingButtons">
                                                                     <button className="ProfilePage-cancelButton EdgeButton EdgeButton--tertiary" data-scribe-element="cancel_button" tabIndex={4}>Cancel</button>
