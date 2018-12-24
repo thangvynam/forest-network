@@ -6,7 +6,7 @@ import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
 import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 import Tweets from '../Tweets/Tweets';
-import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+import {SAVE_TRANSACTION, STORE_BANDWIDTH} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_PAYMENT} from '../../Constant/actionTypes';
@@ -24,6 +24,12 @@ class Profile extends Component {
         this.props.saveTransaction(res)
       })
     }
+
+    axios.get('/bandwidth').then(res => {
+      console.log(res.data);
+      
+      this.props.saveBandwidth(res.data)
+    })
   }
   render() {
     this.getTransaction()
@@ -56,6 +62,22 @@ class Profile extends Component {
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">Joined December 2018</span>
                       </div>
+                      <div className="ProfileHeaderCard-joinDate">
+                        <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
+                        <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">{this.props.detailTweetReducer.bandwidth} OXY</span>
+                      </div>
+                      <div className="fileinput fileinput-new" data-provides="fileinput">
+                    
+                    <div className="fileinput-preview fileinput-exists thumbnail" style={{ maxWidth: 200, maxHeight: 150 }} />
+                    <div>
+                        <span className="btn btn-default btn-file" style={{ cursor: "pointer" }} >
+                            <i className="fa fa-file-image-o" ><span className="fileinput-new"></span></i>
+                            <span className="fileinput-exists">Change</span>
+                            <input type="file" />
+                        </span>
+                        <a href="#" className="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
                       <div className="ProfileHeaderCard-birthdate u-hidden">
                         <span className="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-birthdateText u-dir" dir="ltr">
@@ -251,6 +273,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handleOpenDialogPayment: () => {
       dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
     },
+    saveBandwidth: (bandwidth) => {
+      dispatch({type: STORE_BANDWIDTH, bandwidth})
+    }
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile);

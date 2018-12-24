@@ -1,11 +1,12 @@
 import {GET_COMMENT} from '../Constant/actionTypes'
 import {EDIT_PROFILE} from '../Constant/actionTypes'
-import {SAVE_TRANSACTION} from '../Constant/actionTypes'
+import {SAVE_TRANSACTION, STORE_BANDWIDTH} from '../Constant/actionTypes'
 import {ACCOUNT} from '../Constant/Account'
 const detailTweetInitialState = {
     name : '',
     amount : "0",
     sequence : '0',
+    bandwidth: '0',
     tweet : [
         // {
         //     time : "00:44 PM",
@@ -57,6 +58,8 @@ const detailTweetInitialState = {
 }
 const detailTweetReducer = (state = detailTweetInitialState, action) => {
     switch (action.type) {
+        case STORE_BANDWIDTH:
+            return {...state, bandwidth: action.bandwidth}
         case GET_COMMENT:
             return state.comment
         case EDIT_PROFILE :

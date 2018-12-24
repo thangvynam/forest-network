@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { OPEN_DIALOG_POST } from '../../Constant/actionTypes';
+import * as transaction from "../../tx"
+const {Keypair} = require('stellar-base');
 class Dialog_Post extends Component {
     render() {
         return (
@@ -153,7 +155,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             content = event.target.value;  
         },
         sendPost :()=>{
-            axios.post('/post',{content:content})
+            const secret_key = sessionStorage.getItem("secret_key")
+            const public_key = Keypair.fromSecret(secret_key).publicKey(); 
+            axios.post('/post',{public_key, content}).then(res => {
+                let tx = res.data
+                tx.memo = Buffer.alloc(0)
+                tx.signature = Buffer.alloc(64, 0)
+                let buf = Buffer.from(tx.params.content)
+                tx.params.content = buf
+                transaction.sign(tx, secret_key) 
+                let txHash = '0x' + transaction.encode(tx).toString('hex')
+                axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+            })
             dispatch({ type: OPEN_DIALOG_POST, open: false })
         }
     }

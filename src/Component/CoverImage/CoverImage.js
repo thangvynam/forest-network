@@ -14,6 +14,8 @@ import { EDIT_PROFILE } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWING } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWER } from '../../Constant/actionTypes';
 import Follow from '../Follow/Follow';
+import * as transaction from "../../tx"
+const {Keypair} = require('stellar-base');
 
 class CoverImage extends Component {
     render() {
@@ -192,7 +194,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             name = event.target.value;
         },
         save: () =>{
-            axios.post('/update_name',{name:name})
+            const secret_key = sessionStorage.getItem("secret_key")
+            const public_key = Keypair.fromSecret(secret_key).publicKey(); 
+            axios.post('/update_name',{public_key, name}).then(res => {
+                let tx = res.data
+                tx.memo = Buffer.alloc(0)
+                tx.signature = Buffer.alloc(64, 0)
+                tx.params.value = Buffer.from(tx.params.value)
+                transaction.sign(tx, secret_key) 
+                let txHash = '0x' + transaction.encode(tx).toString('hex')
+                axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+            })
             dispatch({type:EDIT_PROFILE,name:name})
         }
     }
