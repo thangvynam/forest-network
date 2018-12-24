@@ -30,7 +30,7 @@ class Profile extends Component {
     return (
       <div>
         <Nav />
-        <CoverImage/>
+        <CoverImage public_key={this.props.public_key}/>
         <div style={{marginTop:"50px"}}>
         <div className="AppContainer">
         <div  role="main" aria-labelledby="content-main-heading">
@@ -55,7 +55,8 @@ class Profile extends Component {
                       <div className="ProfileHeaderCard-joinDate">
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">Joined December 2018</span>
-                      </div>
+                      </div>  
+                      <input type="file" id="image"/>                                                           
                       <div className="ProfileHeaderCard-birthdate u-hidden">
                         <span className="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-birthdateText u-dir" dir="ltr">

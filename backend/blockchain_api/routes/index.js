@@ -278,7 +278,7 @@ router.get("/update_picture", function (req, res) {
         tx.params.value = data
         v1.sign(tx, secret_key);
         let txHash = v1.encode(tx).toString('base64')
-        // console.log(txHash);
+
         axios.post("https://komodo.forest.network/", {
           "jsonrpc": "2.0",
           "id": 1,
@@ -337,7 +337,6 @@ router.get("/follow", function (req, res) {
             followArr = v1.Followings.decode(decodedData.params.value).addresses
           } catch (error) {
             console.log(error);
-
           }
         }
       })
@@ -405,9 +404,103 @@ router.get("/bandwidth", function (req, res) {
           console.log(bandwidth);
         })
     })
-
-
   res.send("helloworld");
+});
+
+router.post("/getImage", function (req, res) {
+
+  let data = [];
+  let value = '';
+  axios
+    .get(
+      `https://komodo.forest.network/tx_search?query=%22account=%27${req.body.public_key}%27%22&per_page=100`
+    )
+    .then(function (response) {
+      data = response.data;
+      data.result.txs.map(tx => {
+        let buffer = new Buffer.from(tx.tx, "base64");
+        lastBandwidth = Buffer.byteLength(buffer)
+        let decodedData = v1.decode(buffer);
+        if (decodedData.operation === 'update_account' && decodedData.params.key === 'picture') {
+          value = decodedData.params.value;
+          // console.log(value.toString('base64'));
+
+        }
+      })
+    }).then(() => {
+      res.send(value.toString('base64'))
+    })
+});
+
+router.post("/getFollow", function (req, res) {
+
+  let data = [];
+  let followArr = [];
+  let pubKeyList = []
+  axios
+    .get(
+      `https://komodo.forest.network/tx_search?query=%22account=%27${req.body.public_key}%27%22&per_page=100`
+    )
+    .then(function (response) {
+      data = response.data;
+      data.result.txs.map(tx => {
+        let buffer = new Buffer.from(tx.tx, "base64");
+        lastBandwidth = Buffer.byteLength(buffer)
+        let decodedData = v1.decode(buffer);
+        if (decodedData.operation === 'update_account' && decodedData.params.key === 'followings') {
+          try {
+            followArr = v1.Followings.decode(decodedData.params.value).addresses
+          } catch (error) {}
+        }
+      })
+    }).then(() => {
+      followArr.forEach(add => {
+        pubKeyList.push(base32.encode(add))
+      })
+      res.send(pubKeyList)
+    })
+  // .then(()=> {
+  //   let listFollow = []
+  //   let data2 = []
+  //   pubKeyList.map(key => {
+  //     axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${key}%27%22&per_page=100`).then(function (res) {
+  //       let name = "";
+  //       let obj = {};
+  //       data2 = res.data;
+  //       data2.result.txs.map(tx => {
+  //         let buffer = new Buffer.from(tx.tx, "base64");
+  //         lastBandwidth = Buffer.byteLength(buffer)
+  //         let decodedData = v1.decode(buffer);
+  //         if (decodedData.operation === 'update_account' && decodedData.params.key === 'name') {           
+  //           name = decodedData.params.value.toString();                                                      
+  //         } 
+  //         obj = {name, key}
+  //       })
+  //       listFollow.push(obj)
+  //     }).then(() => {
+  //       console.log(listFollow);
+  //       res.send(listFollow)
+  //     })
+  //   })
+  // })
+});
+
+router.post("/getName", function (req, res) {
+  let data2 = []
+  let name = "";
+  axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${req.body.public_key}%27%22&per_page=100`).then(function (res) {
+    data2 = res.data;
+    data2.result.txs.map(tx => {
+      let buffer = new Buffer.from(tx.tx, "base64");
+      lastBandwidth = Buffer.byteLength(buffer)
+      let decodedData = v1.decode(buffer);
+      if (decodedData.operation === 'update_account' && decodedData.params.key === 'name') {
+        name = decodedData.params.value.toString();
+      }
+    })
+  }).then(() => {
+    res.send(name)
+  })
 });
 
 module.exports = router;

@@ -11,7 +11,7 @@ import axios from 'axios';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_SHOW_INFO } from '../../Constant/actionTypes';
 import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
-// import * as transaction from "../../tx"
+import * as transaction from "../../tx"
 import {signTx} from "./sign"
 const {
     Keypair
@@ -112,9 +112,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             axios.post('/create_account',{createdPublicKey:createdPublicKey, 
                                     public_key: ownProps.public_key}).then(res => {
                                         let tx = res.data.tx
-                                        signTx(tx, secret_key)
+                                        // signTx(tx, secret_key)                                      
                                         // transaction.sign(tx, secret_key) 
-                                        console.log(tx);
+                                        console.log(window.forestNetwork);
                                                                                                                                                
                                     })
             dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: true, openDialog: false,

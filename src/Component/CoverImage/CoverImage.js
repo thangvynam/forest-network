@@ -12,10 +12,21 @@ import { connect } from 'react-redux';
 import { OPEN_DIALOG_CONFIG } from '../../Constant/actionTypes';
 import { EDIT_PROFILE } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWING } from '../../Constant/actionTypes';
-import { OPEN_DIALOG_FOLLOWER } from '../../Constant/actionTypes';
+import { OPEN_DIALOG_FOLLOWER, STORE_IMAGE } from '../../Constant/actionTypes';
 import Follow from '../Follow/Follow';
 
 class CoverImage extends Component {
+
+    componentDidMount(){
+        axios.post('/getImage', {public_key: this.props.public_key})
+        .then((res)=> {
+            // console.log(res.data);
+            
+            let src = 'data:image/jpeg;base64,' + res.data;
+            this.props.saveImg(src)
+        })
+    }
+
     render() {
         return (
             <div id="page-outer">
@@ -27,21 +38,13 @@ class CoverImage extends Component {
                             <div className="ProfileCanopy-header u-bgUserColor" style={{ marginTop: 0 }}>
                                 <div className="AppContainer">
                                     <div className="ProfileCanopy-avatar">
-                                        <div className="ProfileAvatarEditing">
-                                            <div className="ProfileAvatarEditing-overlay" />
+                                    <img src={this.props.coverImageReducer.imgSrc} alt="avatar" style={{width: '200px', height:'200px', borderRadius: '50%'}}/>
+                                        {/* <div className="ProfileAvatarEditing">
+                                           
                                             <div className="ProfileAvatarEditing-buttonContainer">
-                                                <button className="ProfileAvatarEditing-button u-boxShadowInsetUserColorHover" type="button" tabIndex={2}>
-                                                    <div className="ProfileAvatarEditing-addAvatarHelp">
-                                                        <span className="Icon Icon--cameraPlus" />
-                                                        <p>Add a profile photo</p>
-                                                    </div>
-                                                    <div className="ProfileAvatarEditing-changeAvatarHelp">
-                                                        <span className="Icon Icon--camera" />
-                                                        <p>Change your profile photo</p>
-                                                    </div>
-                                                </button>
+                                                
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                     <div className="ProfileCanopy-headerPromptAnchor" />
                                 </div>
@@ -86,7 +89,7 @@ class CoverImage extends Component {
                                                             <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip  js-nav u-textUserColor" title="0 Moments" data-nav="user_moments" href="/NamThan82223837/moments">
                                                                 <span className="ProfileNav-label" aria-hidden="true">Following</span>
                                                                 <span className="u-hiddenVisually">Following</span>
-                                                                <span className="ProfileNav-value" data-is-compact="false">1</span>
+                                                                <span className="ProfileNav-value" data-is-compact="false">{this.props.followReducer.followList.length}</span>
                                                             </a>
                                                         </li>
                                                         <li className="ProfileNav-item ProfileNav-item--following" data-more-item=".ProfileNav-dropdownItem--userMoments" onClick={this.props.openDialogFollower}>
@@ -110,10 +113,23 @@ class CoverImage extends Component {
                                                                 <span className="ProfileNav-value" data-is-compact="false">0</span>
                                                             </a>
                                                         </li>
-                                                        <li className="ProfileNav-item ProfileNav-item--userActions u-floatRight u-textRight with-rightCaret ">
+                                                        <li className="ProfileNav-item  u-textRight with-rightCaret " style={{marginLeft:"15em"}} >
                                                             <div className="UserActions   u-textLeft">
                                                                 <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button" onClick={this.props.openDialogConfig}>
                                                                     <span className="button-text">Edit profile</span>
+                                                                </button>
+                                                                <div className="ProfilePage-editingButtons">
+                                                                    <button className="ProfilePage-cancelButton EdgeButton EdgeButton--tertiary" data-scribe-element="cancel_button" tabIndex={4}>Cancel</button>
+                                                                    <span className="ProfilePage-savingIndicator"><span className="spinner-small" />Saving...</span>
+                                                                    <button className="ProfilePage-saveButton EdgeButton EdgeButton--secondary" tabIndex={3}>Save changes</button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <li className="ProfileNav-item  u-textRight with-rightCaret " >
+                                                            <div className="UserActions   u-textLeft">
+                                                                <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button" onClick={this.props.openDialogConfig}>
+                                                                    <span className="button-text">Edit profile 2</span>
                                                                 </button>
                                                                 <div className="ProfilePage-editingButtons">
                                                                     <button className="ProfilePage-cancelButton EdgeButton EdgeButton--tertiary" data-scribe-element="cancel_button" tabIndex={4}>Cancel</button>
@@ -170,7 +186,8 @@ class CoverImage extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         coverImageReducer: state.coverImageReducer,
-        detailTweetReducer:state.detailTweetReducer
+        detailTweetReducer:state.detailTweetReducer,
+        followReducer: state.followReducer
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -194,6 +211,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         save: () =>{
             axios.post('/update_name',{name:name})
             dispatch({type:EDIT_PROFILE,name:name})
+        },
+        saveImg: (src) => {
+            dispatch({type: STORE_IMAGE, imgSrc: src})
         }
     }
 }
