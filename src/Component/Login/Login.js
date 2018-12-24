@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import { Redirect } from 'react-router';
 
 import { DO_LOGIN } from '../../Constant/actionTypes';
 import { connect } from 'react-redux';
@@ -7,14 +8,10 @@ const { Keypair } = require('stellar-base');
 
 class Login extends Component {
   render() {
+    if(this.props.loginReducer.isLogin === true){
+      return (<Redirect to="/"/>)
+  }
     return (
-      // <div class="log-form">
-      //   <h2>Login to your account</h2>
-      //   <form>
-      //     <input name="sckey" type="text" title="secretkey" placeholder="Secret Key" onChange={(event) => this.props.handleInput(event)} autoFocus autocomplete="off" />
-      //     <button type="submit" class="btn" onClick={this.props.handleLogin}>Login</button>
-      //   </form>
-      // </div>
       <div className="limiter">
         <div className="container-login100">
           <div className="wrap-login100">

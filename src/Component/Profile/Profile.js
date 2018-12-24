@@ -1,37 +1,43 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import axios from 'axios';
+import { Redirect } from 'react-router';
 
 import Nav from '../Nav/Nav';
 import CoverImage from '../CoverImage/CoverImage';
-import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 import Tweets from '../Tweets/Tweets';
 import {SAVE_TRANSACTION, STORE_BANDWIDTH} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
-import { OPEN_DIALOG_PAYMENT} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_PAYMENT,DO_LOGIN} from '../../Constant/actionTypes';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
 import Dialog_Payment from '../Dialog_Payment/Dialog_Payment';
+import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 
 class Profile extends Component {
   getTransaction = () =>
-  axios.post('/getdata', {public_key: this.props.public_key})
-    .then((res)=> res.data)
+    axios.post('/getdata', { public_key: this.props.loginReducer.public_key })
+    .then((res) => res.data)
 
   componentDidMount(){
-    if(this.props.detailTweetReducer.tweet.length == 0){
-      this.getTransaction().then((res)=>{
-        this.props.saveTransaction(res)
-      })
-    }
 
-    axios.get('/bandwidth').then(res => {
-      console.log(res.data);
-      
-      this.props.saveBandwidth(res.data)
-    })
+     axios.get('/login')
+          .then((res)=> {
+            if(res.data.isLogin){
+                this.props.login(res.data)         
+            }})
+          .then(()=>{
+            if(this.props.detailTweetReducer.tweet.length == 0){
+              this.getTransaction().then((res)=>{
+                this.props.saveTransaction(res)
+              })
+            }
+          })
   }
   render() {
+    if(this.props.loginReducer.isLogin === false){
+      return (<Redirect to="/login"/>)
+  }
     this.getTransaction()
     return (
       <div>
@@ -243,8 +249,8 @@ class Profile extends Component {
         </div>
       </div>
     </div>
-    <Dialog_CreateAccount public_key={this.props.public_key}
-                          secret_key={this.props.secret_key}/>    
+    <Dialog_CreateAccount public_key={this.props.loginReducer.public_key}
+                          secret_key={this.props.loginReducer.secret_key}/>    
     <Dialog_Post/>
     <Dialog_Payment/>
   </div>
@@ -255,7 +261,8 @@ class Profile extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     coverImageReducer: state.coverImageReducer,
-    detailTweetReducer:state.detailTweetReducer
+    detailTweetReducer:state.detailTweetReducer,
+    loginReducer:state.loginReducer
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -273,9 +280,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handleOpenDialogPayment: () => {
       dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
     },
+
     saveBandwidth: (bandwidth) => {
       dispatch({type: STORE_BANDWIDTH, bandwidth})
-    }
+    },
+    login: (res) => {
+      console.log(res);
+      dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
+  }
+
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile);
