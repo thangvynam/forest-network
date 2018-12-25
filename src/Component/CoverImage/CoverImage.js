@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 import { OPEN_DIALOG_CONFIG } from '../../Constant/actionTypes';
 import { EDIT_PROFILE } from '../../Constant/actionTypes';
-import { OPEN_DIALOG_FOLLOWING } from '../../Constant/actionTypes';
+import { OPEN_DIALOG_FOLLOWING, OPEN_DIALOG_FOLLOW } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWER, STORE_IMAGE } from '../../Constant/actionTypes';
 import Follow from '../Follow/Follow';
 import * as transaction from "../../tx"
@@ -20,7 +20,9 @@ const {Keypair} = require('stellar-base');
 class CoverImage extends Component {
 
     componentDidMount(){
-        axios.post('/getImage', {public_key: this.props.public_key})
+        const secret_key = sessionStorage.getItem("secret_key")
+        const public_key = Keypair.fromSecret(secret_key).publicKey(); 
+        axios.post('/getImage', {public_key})
         .then((res)=> {
             // console.log(res.data);
             
@@ -130,8 +132,8 @@ class CoverImage extends Component {
                                                         &nbsp;&nbsp;&nbsp;&nbsp;
                                                         <li className="ProfileNav-item  u-textRight with-rightCaret " >
                                                             <div className="UserActions   u-textLeft">
-                                                                <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button" onClick={this.props.openDialogConfig}>
-                                                                    <span className="button-text">Edit profile 2</span>
+                                                                <button type="button" className="UserActions-editButton edit-button EdgeButton EdgeButton--tertiary" data-scribe-element="profile_edit_button" onClick={this.props.openDialogFollow}>
+                                                                    <span className="button-text">Follow</span>
                                                                 </button>
                                                                 <div className="ProfilePage-editingButtons">
                                                                     <button className="ProfilePage-cancelButton EdgeButton EdgeButton--tertiary" data-scribe-element="cancel_button" tabIndex={4}>Cancel</button>
@@ -180,6 +182,35 @@ class CoverImage extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Dialog
+                    open={this.props.coverImageReducer.openFollow}
+                    onClose={this.props.handleCloseFollow}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Follow</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Input public key 
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Public Key"
+                            fullWidth
+                            onChange={(event) => this.props.handleInputFollow(event)}
+                        />
+                      
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.props.handleFollow} color="primary">
+                            Follow
+                        </Button>
+                        <Button onClick={this.props.handleClose} color="primary">
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <Follow/>
             </div>
         );
@@ -194,9 +225,13 @@ const mapStateToProps = (state, ownProps) => {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
     let name = '';
+    let followKey = '';
     return {
         openDialogConfig: () => {
             dispatch({ type: OPEN_DIALOG_CONFIG, open: true })
+        },
+        openDialogFollow: () => {
+            dispatch({ type: OPEN_DIALOG_FOLLOW, openFollow: true })
         },
         openDialogFollowing: () => {
             dispatch({ type: OPEN_DIALOG_FOLLOWING, open: true })
@@ -207,8 +242,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         handleClose: () => {
             dispatch({ type: OPEN_DIALOG_CONFIG, open: false })
         },
+        handleCloseFollow: () => {
+            dispatch({ type: OPEN_DIALOG_FOLLOW, openFollow: false })
+        },
         handleInputChangeName: (event) => {
             name = event.target.value;
+        },
+        handleInputFollow: (event) => {
+            followKey = event.target.value;
         },
         save: () =>{
             const secret_key = sessionStorage.getItem("secret_key")
@@ -223,6 +264,23 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
             })
             dispatch({type:EDIT_PROFILE,name:name})
+        },
+        handleFollow: () =>{
+            const secret_key = sessionStorage.getItem("secret_key")
+            const public_key = Keypair.fromSecret(secret_key).publicKey(); 
+            axios.post('/follow',{public_key, followKey}).then(res => {
+                let tx = res.data
+                console.log(tx);
+                
+                tx.memo = Buffer.alloc(0)
+                tx.signature = Buffer.alloc(64, 0)
+                tx.params.value = Buffer.from(tx.params.value)
+                transaction.sign(tx, secret_key) 
+                let txHash = '0x' + transaction.encode(tx).toString('hex')
+                axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+                dispatch({ type: OPEN_DIALOG_FOLLOW, openFollow: false })
+                alert("Follow successfully!")
+            })
         },
         saveImg: (src) => {
             dispatch({type: STORE_IMAGE, imgSrc: src})
