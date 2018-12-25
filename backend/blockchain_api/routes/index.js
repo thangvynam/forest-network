@@ -319,8 +319,8 @@ router.post("/follow", function (req, res) {
 });
 
 
-router.get("/bandwidth", function (req, res) {
-  const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
+router.post("/bandwidth", function (req, res) {
+  let param = req.body
   let bandwidth = 0;
   let oxy = 1 * 22020096 * 86400;
   let lastBandwidth = 0
@@ -331,7 +331,7 @@ router.get("/bandwidth", function (req, res) {
   let ownData = [];
   axios
     .get(
-      "https://komodo.forest.network/tx_search?query=%22account=%27GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD%27%22&per_page=100"
+      `https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`
     )
     .then(function (response) {
       data = response.data;
@@ -340,12 +340,12 @@ router.get("/bandwidth", function (req, res) {
         let buffer = new Buffer.from(tx.tx, "base64");
         lastBandwidth = Buffer.byteLength(buffer)
         let decodedData = v1.decode(buffer);
-        if (decodedData.operation === 'payment' && decodedData.params.address === public_key) {
+        if (decodedData.operation === 'payment' && decodedData.params.address === param.public_key) {
           inMoney += decodedData.params.amount;
-        } else if (decodedData.operation === 'payment' && decodedData.account === public_key) {
+        } else if (decodedData.operation === 'payment' && decodedData.account === param.public_key) {
           outMoney += decodedData.params.amount;
         }
-        if (decodedData.account === public_key) {
+        if (decodedData.account === param.public_key) {
           ownData.push(tx)
         }
         balance = inMoney - outMoney
@@ -435,6 +435,86 @@ router.post("/getName", function (req, res) {
     })
   }).then(() => {
     res.send(name)
+  })
+});
+
+router.post("/comment", function (req, res) {
+  let param = req.body
+  let data = []
+  let count = 0
+  let hash = ""
+  const tx = {
+    version: 1,
+    account: param.public_key,
+    sequence: 0,
+    memo: Buffer.alloc(0),
+    operation: 'interact',
+    params: {
+      object: Buffer.alloc(0),
+      content: Buffer.alloc(0)
+    },
+  }
+  axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`).then(function (res) {
+    data = res.data;
+    data.result.txs.map(tx => {
+        let buffer = new Buffer.from(tx.tx, "base64");
+        lastBandwidth = Buffer.byteLength(buffer)
+        let decodedData = v1.decode(buffer);
+        if(decodedData.account === param.public_key) count++;
+        if(tx.height === param.height) hash = tx.hash;
+    })
+  }).then(() => {
+    var text = {
+      type: 1,
+      text: param.content
+    }
+    tx.sequence = count + 1;
+    tx.params.object = hash
+    tx.params.content = v1.PlainTextContent.encode(text)
+    v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y") 
+    let txHash = '0x' + v1.encode(tx).toString('hex')
+    axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})  
+    res.send(tx)
+  })
+});
+
+router.post("/react", function (req, res) {
+  let param = req.body
+  let data = []
+  let count = 0
+  let hash = ""
+  const tx = {
+    version: 1,
+    account: param.public_key,
+    sequence: 0,
+    memo: Buffer.alloc(0),
+    operation: 'interact',
+    params: {
+      object: Buffer.alloc(0),
+      content: Buffer.alloc(0)
+    },
+  }
+  axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`).then(function (res) {
+    data = res.data;
+    data.result.txs.map(tx => {
+        let buffer = new Buffer.from(tx.tx, "base64");
+        lastBandwidth = Buffer.byteLength(buffer)
+        let decodedData = v1.decode(buffer);
+        if(decodedData.account === param.public_key) count++;
+        if(tx.height === param.height) hash = tx.hash;
+    })
+  }).then(() => {
+    var react = {
+      type: 2,
+      reaction: parseInt(param.reaction)
+    }
+    tx.sequence = count + 1;
+    tx.params.object = hash
+    tx.params.content = v1.ReactContent.encode(react)
+    v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y") 
+    let txHash = '0x' + v1.encode(tx).toString('hex')
+    axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})  
+    res.send(tx)
   })
 });
 

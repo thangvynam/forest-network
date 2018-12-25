@@ -54,6 +54,11 @@ const Followings = vstruct([
   { name: 'addresses', type: vstruct.VarArray(vstruct.UInt16BE, vstruct.Buffer(35)) },
 ]);
 
+const ReactContent = vstruct([
+  { name: 'type', type: vstruct.UInt8 },
+  { name: 'reaction', type: vstruct.UInt8 },
+]);
+
 function encode(tx) {
   let params, operation;
   if (tx.version !== 1) {
@@ -181,5 +186,6 @@ module.exports = {
   decode,
   sign,
   PlainTextContent,
-  Followings
+  Followings,
+  ReactContent
 };

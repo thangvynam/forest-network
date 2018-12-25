@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
 
-import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+import {SAVE_TRANSACTION, STORE_FOLLOW} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_PAYMENT,DO_LOGIN,STORE_IMAGE} from '../../Constant/actionTypes';
@@ -25,25 +25,29 @@ class NewsFeed extends Component {
 
     componentDidMount() {
         axios.get('/login')
-             .then((res)=> {
-               if(res.data.isLogin){
-                    this.props.login(res.data)         
-
-              }})
-            const secret_key = sessionStorage.getItem("secret_key")
-          const public_key = Keypair.fromSecret(secret_key).publicKey(); 
-          axios.post('/getImage', {public_key})
-          .then((res)=> {
+          .then((res) => {
+            if (res.data.isLogin) {
+              this.props.login(res.data)
+            }
+          })
+        const secret_key = sessionStorage.getItem("secret_key")
+        const public_key = Keypair.fromSecret(secret_key).publicKey();
+        axios.post('/getImage', {
+            public_key
+          })
+          .then((res) => {
             let src = 'data:image/jpeg;base64,' + res.data;
             this.props.saveImg(src)
+          })
+        axios.post("/getFollow", {
+          public_key
+        }).then(res => {
+          this.props.storeFollow(res.data)
         })
-        
-                    this.getTransaction().then((res) => {
-                      this.props.saveTransaction(res)
-                  })
-                  }
-            })
-              
+
+        this.getTransaction().then((res) => {
+          this.props.saveTransaction(res)
+        })
         // if(this.props.loginReducer.isLogin){
         //     if (this.props.detailTweetReducer.tweet.length == 0) {
         //         this.getTransaction().then((res) => {
@@ -89,7 +93,7 @@ class NewsFeed extends Component {
                                 </li><li className="ProfileCardStats-stat Arrange-sizeFit">
                                         <a className="ProfileCardStats-statLink u-textUserColor u-linkClean u-block js-nav js-tooltip" href="/NamThan82223837/following" data-element-term="following_stats" data-original-title="1 Following">
                                             <span className="ProfileCardStats-statLabel u-block">Following</span>
-                                            <span className="ProfileCardStats-statValue" data-count={1} data-is-compact="false">1</span>
+                                            <span className="ProfileCardStats-statValue" data-count={1} data-is-compact="false">{this.props.followReducer.followList.length}</span>
                                         </a>
                                     </li><li className="ProfileCardStats-stat Arrange-sizeFit">
                                         <a className="ProfileCardStats-statLink u-textUserColor u-linkClean u-block js-nav js-tooltip" href="/NamThan82223837/followers" data-element-term="follower_stats" data-original-title="1 Follower">
@@ -285,14 +289,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         saveImg: (src) => {
           dispatch({type: STORE_IMAGE, imgSrc: src})
-      }
+        },
+        storeFollow: (follow) => {
+          dispatch({type: STORE_FOLLOW, followList: follow})
+        }
     }
 }
 const mapStateToProps = (state, ownProps) => {
     return {
         detailTweetReducer: state.detailTweetReducer,
         loginReducer: state.loginReducer,
-        coverImageReducer: state.coverImageReducer
+        coverImageReducer: state.coverImageReducer,
+        followReducer: state.followReducer
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NewsFeed);
