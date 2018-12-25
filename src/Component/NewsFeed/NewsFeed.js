@@ -3,15 +3,18 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
-import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
-import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
-import { OPEN_DIALOG_POST,SAVE_PUBLIC_KEY} from '../../Constant/actionTypes';
-import { OPEN_DIALOG_PAYMENT,DO_LOGIN} from '../../Constant/actionTypes';
+
+import {SAVE_TRANSACTION, STORE_FOLLOW} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_CREATE_ACCOUNT,SAVE_PUBLIC_KEY } from '../../Constant/actionTypes';
+
+import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_PAYMENT,DO_LOGIN,STORE_IMAGE} from '../../Constant/actionTypes';
 import Nav from '../Nav/Nav';
 import Tweets from '../Tweets/Tweets';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
 import Dialog_Payment from '../Dialog_Payment/Dialog_Payment';
 import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
+const {Keypair} = require('stellar-base');
 
 class NewsFeed extends Component {
     constructor(props) {
@@ -23,23 +26,30 @@ class NewsFeed extends Component {
 
     componentDidMount() {
         axios.get('/login')
-             .then((res)=> {
-               if(res.data.isLogin){
-                    this.props.savePublicKey(res.data.clientPublicKey);
-                    this.props.login(res.data)         
-                    this.getTransaction().then((res) => {
-                      this.props.saveTransaction(res)
-                  })
-                }
-            })
-              
-        // if(this.props.loginReducer.isLogin){
-        //     if (this.props.detailTweetReducer.tweet.length == 0) {
-        //         this.getTransaction().then((res) => {
-        //             this.props.saveTransaction(res)
-        //      ,   })
-        //     }
-        // }
+          .then((res) => {
+            if (res.data.isLogin) {
+              this.props.savePublicKey(res.data.clientPublicKey);
+              this.props.login(res.data)         
+            }
+          })
+        const secret_key = sessionStorage.getItem("secret_key")
+        const public_key = Keypair.fromSecret(secret_key).publicKey();
+        axios.post('/getImage', {
+            public_key
+          })
+          .then((res) => {
+            let src = 'data:image/jpeg;base64,' + res.data;
+            this.props.saveImg(src)
+          })
+        axios.post("/getFollow", {
+          public_key
+        }).then(res => {
+          this.props.storeFollow(res.data)
+        })
+
+        this.getTransaction().then((res) => {
+          this.props.saveTransaction(res)
+        })
     }
     render() {
         if(this.props.loginReducer.isLogin === false){
@@ -276,6 +286,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         savePublicKey: (public_key) =>{
           
           dispatch({type: SAVE_PUBLIC_KEY, public_key: public_key})
+        },
+        saveImg: (src) => {
+          dispatch({type: STORE_IMAGE, imgSrc: src})
+        },
+        storeFollow: (follow) => {
+          dispatch({type: STORE_FOLLOW, followList: follow})
         }
         
     }
@@ -283,7 +299,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = (state, ownProps) => {
     return {
         detailTweetReducer: state.detailTweetReducer,
-        loginReducer: state.loginReducer
+        loginReducer: state.loginReducer,
+        coverImageReducer: state.coverImageReducer,
+        followReducer: state.followReducer
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NewsFeed);

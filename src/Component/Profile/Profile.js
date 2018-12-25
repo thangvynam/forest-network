@@ -45,6 +45,9 @@ class Profile extends Component {
               })
             }
           })
+          axios.post('/bandwidth', {public_key: this.props.loginReducer.public_key}).then(res => {
+            this.props.saveBandwidth(res.data)
+          })
   }
   handleFileSelect = (e) => {
     e.preventDefault();

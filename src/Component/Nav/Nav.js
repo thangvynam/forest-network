@@ -71,9 +71,7 @@ class Nav extends Component {
                     </div>
                     <ul className="nav right-actions">
                       <li className="me dropdown session js-session" data-global-action="t1me" id="user-dropdown">
-                        <a href="/settings" className="btn js-tooltip settings dropdown-toggle js-dropdown-toggle" id="user-dropdown-toggle" data-placement="bottom" rel="noopener" role="button" aria-haspopup="true" data-original-title="Profile and settings">
-                          <img className="Avatar Avatar--size32" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png" alt="Profile and settings" data-user-id={1068706177666580480} />
-                        </a>
+                        <img src={this.props.coverImageReducer.imgSrc} style={{width: '50px', height:'50px', borderRadius: '50%'}} />
                         <div className="DashUserDropdown dropdown-menu dropdown-menu--rightAlign is-forceRight is-autoCentered">
                           <div className="dropdown-caret">
                             <span className="caret-outer" />
@@ -163,6 +161,7 @@ class Nav extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
       loginReducer: state.loginReducer,
+      coverImageReducer: state.coverImageReducer
   }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
