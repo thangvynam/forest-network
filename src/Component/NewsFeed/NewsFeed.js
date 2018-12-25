@@ -26,25 +26,29 @@ class NewsFeed extends Component {
              .then((res)=> {
                if(res.data.isLogin){
                     this.props.login(res.data)         
-              }})
-
-        if(this.props.loginReducer.isLogin){
-            if (this.props.detailTweetReducer.tweet.length == 0) {
-                this.getTransaction().then((res) => {
-                    this.props.saveTransaction(res)
-                })
-            }
-        }
+                    this.getTransaction().then((res) => {
+                      this.props.saveTransaction(res)
+                  })
+                  }
+            })
+              
+        // if(this.props.loginReducer.isLogin){
+        //     if (this.props.detailTweetReducer.tweet.length == 0) {
+        //         this.getTransaction().then((res) => {
+        //             this.props.saveTransaction(res)
+        //      ,   })
+        //     }
+        // }
     }
     render() {
         if(this.props.loginReducer.isLogin === false){
             return (<Redirect to="/login"/>)
         }
-        this.getTransaction()
+        if(this.props.detailTweetReducer.update){
+          this.getTransaction()
         return (
             <div>
                 <Nav />
-                
                 <div className="dashboard dashboard-left" style={{ marginLeft: "14px" }}>
                     <div className="DashboardProfileCard  module">
                         <a className="DashboardProfileCard-bg u-bgUserColor u-block" tabIndex={-1} aria-hidden="true" rel="noopener">
@@ -243,6 +247,8 @@ class NewsFeed extends Component {
             <Dialog_Payment/>
             </div>
         );
+        }
+        
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -252,6 +258,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch({ type: SAVE_TRANSACTION, res: res })
         },
         openDialogCreateAccount : ()=>{
+
           dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: true })
         },
         handleOpenDialogPost: () => {

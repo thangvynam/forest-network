@@ -16,9 +16,10 @@ import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 
 function buildFileSelector(){
   const fileSelector = document.createElement('input');
-  fileSelector.id = "inputFile";
+  fileSelector.setAttribute('id','inputFile');
   fileSelector.setAttribute('type', 'file');
   fileSelector.setAttribute('multiple', 'multiple');
+  //document.appendChild( fileSelector);
   return fileSelector;
 }
 
@@ -31,6 +32,7 @@ class Profile extends Component {
 
   componentDidMount(){
     this.fileSelector = buildFileSelector();
+   
      axios.get('/login')
           .then((res)=> {
             if(res.data.isLogin){
@@ -103,7 +105,7 @@ class Profile extends Component {
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">{this.props.detailTweetReducer.bandwidth} OXY</span>
                       </div>
-                      <input type="file" onClick={this.handleFileSelect}  onBlur={(event) => this.handlePreviewImg(event) }/>Select files
+                      <input onClick={this.handleFileSelect}  onBlur={(event) => this.handlePreviewImg(event) }/>Select files
                       <div className="ProfileHeaderCard-birthdate u-hidden">
                         <span className="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-birthdateText u-dir" dir="ltr">

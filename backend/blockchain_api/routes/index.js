@@ -202,7 +202,7 @@ router.post("/update_name", function (req, res) {
       res.send(tx)
     })
 });
-
+// secret key test SDYBQ4Z2NAQH3K4WEBUWQNO6WQZN7QH3IEP4TFMN6FWWWO4PT7AFPQRJ
 router.get("/update_picture", function (req, res) {
   const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
@@ -254,7 +254,10 @@ router.get("/update_picture", function (req, res) {
 
 router.post('/login', function (req, res, next) {
   isLogin = req.body.isLogin;
-  clientPublicKey = req.body.public_key
+  if(isLogin)
+    clientPublicKey = req.body.public_key
+  else
+    clientPublicKey = ''
   res.send("true")
 })
 
