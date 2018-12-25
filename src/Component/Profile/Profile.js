@@ -14,13 +14,25 @@ import Dialog_Post from '../Dialog_Post/Dialog_Post';
 import Dialog_Payment from '../Dialog_Payment/Dialog_Payment';
 import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 
+function buildFileSelector(){
+  const fileSelector = document.createElement('input');
+  fileSelector.setAttribute('id','inputFile');
+  fileSelector.setAttribute('type', 'file');
+  fileSelector.setAttribute('multiple', 'multiple');
+  //document.appendChild( fileSelector);
+  return fileSelector;
+}
+
+
 class Profile extends Component {
+
   getTransaction = () =>
     axios.post('/getdata', { public_key: this.props.loginReducer.public_key })
     .then((res) => res.data)
 
   componentDidMount(){
-
+    this.fileSelector = buildFileSelector();
+   
      axios.get('/login')
           .then((res)=> {
             if(res.data.isLogin){
@@ -34,15 +46,36 @@ class Profile extends Component {
             }
           })
   }
+  handleFileSelect = (e) => {
+    e.preventDefault();
+    this.fileSelector.click();
+  }
+
+  handlePreviewImg = (event) =>{
+    const selectedFile = document.getElementsByTagName('input');
+    console.log(selectedFile)
+    // console.log(event)
+    // let files = event.target.files;
+    // let imageUrl = '';
+    // console.log(files)
+    // if(files.length!=0){
+    //     imageUrl=files[0].result;
+    //     alert(imageUrl)
+    // }
+}
+  
   render() {
     if(this.props.loginReducer.isLogin === false){
       return (<Redirect to="/login"/>)
   }
     this.getTransaction()
     return (
+      
+      // <input onClick={this.handleFileSelect}  onBlur={(event) => this.handlePreviewImg(event) } />
       <div>
         <Nav />
-        <CoverImage public_key={this.props.public_key}/>
+        <CoverImage/>
+        
         <div style={{marginTop:"50px"}}>
         <div className="AppContainer">
         <div  role="main" aria-labelledby="content-main-heading">
@@ -61,8 +94,8 @@ class Profile extends Component {
                         <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.sequence}</a></span>
                       </div>
                       <div class="ProfileHeaderCard-location">
-                        <span class="fa fa-money"></span>
-                        <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.amount}</a></span>
+                        <span className="fa fa-money"></span>
+                        <span className="ProfileHeaderCard-locationText u-dir" dir="ltr">  <a href="/search?q=place%3A2371490f9d073edc" data-place-id="2371490f9d073edc">{this.props.detailTweetReducer.amount}</a></span>
                       </div>
                       <div className="ProfileHeaderCard-joinDate">
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
@@ -72,18 +105,7 @@ class Profile extends Component {
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">{this.props.detailTweetReducer.bandwidth} OXY</span>
                       </div>
-                      <div className="fileinput fileinput-new" data-provides="fileinput">
-                    
-                    <div className="fileinput-preview fileinput-exists thumbnail" style={{ maxWidth: 200, maxHeight: 150 }} />
-                    <div>
-                        <span className="btn btn-default btn-file" style={{ cursor: "pointer" }} >
-                            <i className="fa fa-file-image-o" ><span className="fileinput-new"></span></i>
-                            <span className="fileinput-exists">Change</span>
-                            <input type="file" />
-                        </span>
-                        <a href="#" className="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                    </div>
-                </div>
+                      <input onClick={this.handleFileSelect}  onBlur={(event) => this.handlePreviewImg(event) }/>Select files
                       <div className="ProfileHeaderCard-birthdate u-hidden">
                         <span className="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-birthdateText u-dir" dir="ltr">
@@ -254,6 +276,7 @@ class Profile extends Component {
     <Dialog_Post/>
     <Dialog_Payment/>
   </div>
+  
     );
   }
 }
@@ -280,15 +303,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handleOpenDialogPayment: () => {
       dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
     },
-
     saveBandwidth: (bandwidth) => {
       dispatch({type: STORE_BANDWIDTH, bandwidth})
     },
     login: (res) => {
       console.log(res);
       dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
-  }
-
+    }
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile);

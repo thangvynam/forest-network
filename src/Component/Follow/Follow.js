@@ -12,7 +12,10 @@ import axios from 'axios';
 import { Keypair } from 'stellar-base';
 
 class Follow extends Component {
-
+    state={
+        persons:[]
+      }
+    
     componentDidMount(){
         const secret_key = sessionStorage.getItem("secret_key")
         const key = Keypair.fromSecret(secret_key)
@@ -20,13 +23,24 @@ class Follow extends Component {
         let name = []
         axios.post("/getFollow", {public_key}).then(res => {
             this.props.storeFollow(res.data)
+        }).then(()=>{
+            let people = [];
+            this.props.followReducer.followList.map((id) =>{
+                axios.post('/getName',{public_key:id})
+                    .then((res)=> {
+                        people.push(res.data)
+                        this.setState({persons:people}) 
+                    })
+            })
         })
+        
+
     }
 
     loadFollow(){
         if(this.props.followReducer.open){
             let result = []
-            this.props.followReducer.followList.map((id) => {
+            this.props.followReducer.followList.map((id, index) => {
                 result.unshift(
                     <div class="Grid-cell u-size1of2 u-lg-size1of3 u-mb10" data-test-selector="ProfileTimelineUser" role="presentation">
                                     <div class="js-stream-item" role="listitem" data-item-id="96951800" id="stream-item-user-96951800" data-item-type="user">
@@ -109,7 +123,7 @@ class Follow extends Component {
                                 <div class="ProfileNameTruncated account-group">
                                     <div class="u-textTruncate u-inlineBlock ProfileNameTruncated-withBadges ProfileNameTruncated-withBadges--1">
                                         <a class="fullname ProfileNameTruncated-link u-textInheritColor js-nav" href="/FCBarcelona" data-aria-label-part="">
-                                        {id}</a></div><span class="UserBadges"><span class="Icon Icon--verified"><span class="u-hiddenVisually">Verified account</span></span></span>
+                                        {this.state.persons[index]}</a></div><span class="UserBadges"><span class="Icon Icon--verified"><span class="u-hiddenVisually">Verified account</span></span></span>
                                     </div>
           
                                     <span class="ProfileCard-screenname">

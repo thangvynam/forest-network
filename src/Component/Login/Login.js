@@ -49,6 +49,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     handleInput: (event) => {
       secret_key = event.target.value;
+
     },
     handleLogin: () => {
       try {

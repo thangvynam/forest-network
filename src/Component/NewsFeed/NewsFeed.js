@@ -3,7 +3,11 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
-import { SAVE_TRANSACTION ,DO_LOGIN, STORE_IMAGE} from '../../Constant/actionTypes';
+
+import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
+import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
+import { OPEN_DIALOG_PAYMENT,DO_LOGIN,STORE_IMAGE} from '../../Constant/actionTypes';
 import Nav from '../Nav/Nav';
 import Tweets from '../Tweets/Tweets';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
@@ -24,14 +28,8 @@ class NewsFeed extends Component {
              .then((res)=> {
                if(res.data.isLogin){
                     this.props.login(res.data)         
-              }})
 
-        if(this.props.loginReducer.isLogin){
-            if (this.props.detailTweetReducer.tweet.length == 0) {
-                this.getTransaction().then((res) => {
-                    this.props.saveTransaction(res)
-                })
-            }
+              }})
             const secret_key = sessionStorage.getItem("secret_key")
           const public_key = Keypair.fromSecret(secret_key).publicKey(); 
           axios.post('/getImage', {public_key})
@@ -39,13 +37,27 @@ class NewsFeed extends Component {
             let src = 'data:image/jpeg;base64,' + res.data;
             this.props.saveImg(src)
         })
-        }
+        
+                    this.getTransaction().then((res) => {
+                      this.props.saveTransaction(res)
+                  })
+                  }
+            })
+              
+        // if(this.props.loginReducer.isLogin){
+        //     if (this.props.detailTweetReducer.tweet.length == 0) {
+        //         this.getTransaction().then((res) => {
+        //             this.props.saveTransaction(res)
+        //      ,   })
+        //     }
+        // }
     }
     render() {
         if(this.props.loginReducer.isLogin === false){
             return (<Redirect to="/login"/>)
         }
-        this.getTransaction()
+        if(this.props.detailTweetReducer.update){
+          this.getTransaction()
         return (
             <div>
                 <Nav />
@@ -243,10 +255,12 @@ class NewsFeed extends Component {
             </div>
             <Dialog_CreateAccount public_key={this.props.loginReducer.public_key}
                           secret_key={this.props.loginReducer.secret_key}/>    
-    <Dialog_Post/>
-    <Dialog_Payment/>
+            <Dialog_Post/>
+            <Dialog_Payment/>
             </div>
         );
+        }
+        
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -254,6 +268,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         saveTransaction: (res) => {
             console.log(res)
             dispatch({ type: SAVE_TRANSACTION, res: res })
+        },
+        openDialogCreateAccount : ()=>{
+
+          dispatch({ type: OPEN_DIALOG_CREATE_ACCOUNT, openDialog: true })
+        },
+        handleOpenDialogPost: () => {
+          dispatch({ type: OPEN_DIALOG_POST, open: true })
+        },
+        handleOpenDialogPayment: () => {
+          dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
         },
         login: (res) => {
             console.log(res);

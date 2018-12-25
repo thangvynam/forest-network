@@ -7,6 +7,7 @@ const detailTweetInitialState = {
     amount : "0",
     sequence : '0',
     bandwidth: '0',
+    update : true,
     tweet : [
         // {
         //     time : "00:44 PM",
