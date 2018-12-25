@@ -415,30 +415,6 @@ router.post("/getFollow", function (req, res) {
       })
       res.send(pubKeyList)
     })
-  // .then(()=> {
-  //   let listFollow = []
-  //   let data2 = []
-  //   pubKeyList.map(key => {
-  //     axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${key}%27%22&per_page=100`).then(function (res) {
-  //       let name = "";
-  //       let obj = {};
-  //       data2 = res.data;
-  //       data2.result.txs.map(tx => {
-  //         let buffer = new Buffer.from(tx.tx, "base64");
-  //         lastBandwidth = Buffer.byteLength(buffer)
-  //         let decodedData = v1.decode(buffer);
-  //         if (decodedData.operation === 'update_account' && decodedData.params.key === 'name') {           
-  //           name = decodedData.params.value.toString();                                                      
-  //         } 
-  //         obj = {name, key}
-  //       })
-  //       listFollow.push(obj)
-  //     }).then(() => {
-  //       console.log(listFollow);
-  //       res.send(listFollow)
-  //     })
-  //   })
-  // })
 });
 
 router.post("/getName", function (req, res) {

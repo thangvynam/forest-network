@@ -3,12 +3,13 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
-import { SAVE_TRANSACTION ,DO_LOGIN} from '../../Constant/actionTypes';
+import { SAVE_TRANSACTION ,DO_LOGIN, STORE_IMAGE} from '../../Constant/actionTypes';
 import Nav from '../Nav/Nav';
 import Tweets from '../Tweets/Tweets';
 import Dialog_Post from '../Dialog_Post/Dialog_Post';
 import Dialog_Payment from '../Dialog_Payment/Dialog_Payment';
 import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
+const {Keypair} = require('stellar-base');
 
 class NewsFeed extends Component {
     constructor(props) {
@@ -31,6 +32,13 @@ class NewsFeed extends Component {
                     this.props.saveTransaction(res)
                 })
             }
+            const secret_key = sessionStorage.getItem("secret_key")
+          const public_key = Keypair.fromSecret(secret_key).publicKey(); 
+          axios.post('/getImage', {public_key})
+          .then((res)=> {
+            let src = 'data:image/jpeg;base64,' + res.data;
+            this.props.saveImg(src)
+        })
         }
     }
     render() {
@@ -49,7 +57,7 @@ class NewsFeed extends Component {
                             <div className="DashboardProfileCard-avatarContainer">
                                 <div id="choose-photo" className="controls avatar-settings inline-upload-avatar dropdown center">
                                     <a className="DashboardProfileCard-avatarLink ProfileAvatar-placeholder u-inlineBlock js-nav js-tooltip profile-picture js-dropdown-toggle" href="/NamThan82223837" tabIndex={-1} aria-hidden="true" data-placement="top" data-scribe-element="profile_avatar" role="button" aria-haspopup="true" data-original-title="Add a profile photo">
-                                        <img className="DashboardProfileCard-avatarImage js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt />
+                                        <img  src={this.props.coverImageReducer.imgSrc} style={{width: '80px', height:'80px', borderRadius: '50%'}} />
                                     </a>
                                 </div>
                             </div>
@@ -250,13 +258,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         login: (res) => {
             console.log(res);
             dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
-        }
+        },
+        saveImg: (src) => {
+          dispatch({type: STORE_IMAGE, imgSrc: src})
+      }
     }
 }
 const mapStateToProps = (state, ownProps) => {
     return {
         detailTweetReducer: state.detailTweetReducer,
-        loginReducer: state.loginReducer
+        loginReducer: state.loginReducer,
+        coverImageReducer: state.coverImageReducer
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NewsFeed);
