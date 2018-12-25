@@ -1,13 +1,14 @@
 import {GET_COMMENT} from '../Constant/actionTypes'
-import {EDIT_PROFILE} from '../Constant/actionTypes'
-import {SAVE_TRANSACTION, STORE_BANDWIDTH} from '../Constant/actionTypes'
-import {ACCOUNT} from '../Constant/Account'
+import {EDIT_PROFILE,UPDATE_REAL_TIME} from '../Constant/actionTypes'
+import {SAVE_TRANSACTION, STORE_BANDWIDTH,SAVE_PUBLIC_KEY} from '../Constant/actionTypes'
+
 const detailTweetInitialState = {
     name : '',
     amount : "0",
     sequence : '0',
     bandwidth: '0',
     update : true,
+    public_key: '',
     tweet : [
         // {
         //     time : "00:44 PM",
@@ -65,18 +66,22 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
             return state.comment
         case EDIT_PROFILE :
             return {...state,name:action.name,location:action.location}
+        case UPDATE_REAL_TIME:
+            return {...state,update:action.update}
+        case SAVE_PUBLIC_KEY:
+            return {...state,public_key:action.public_key}
         case SAVE_TRANSACTION:{
-            let amount = 0;
             let str = '';
             let firstName = 0;
             let firstSequence = 0;
             let sequence = 0;
+            let amount = 0;
             action.res.map((res)=>{
                 if(res.operation == "payment"){
-                    if(res.params.address === ACCOUNT){
+                    if(res.params.address === state.public_key){
                         amount+= res.params.amount;
                     }  
-                    if(res.account === ACCOUNT){
+                    if(res.account === state.public_key){
                         amount-= res.params.amount;
                     }
                 }
@@ -92,8 +97,6 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
                     firstSequence++;
                 }
             })
-               
-            
             return {...state,tweet:action.res,amount:amount,name:str,sequence:sequence}
         }
         default:

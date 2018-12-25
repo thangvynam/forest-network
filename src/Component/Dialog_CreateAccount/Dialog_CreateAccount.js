@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { OPEN_DIALOG_CREATE_ACCOUNT } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_SHOW_INFO } from '../../Constant/actionTypes';
-import {SAVE_TRANSACTION} from '../../Constant/actionTypes';
 import * as transaction from "../../tx"
 var Buffer = require('buffer/').Buffer
 const {Keypair} = require('stellar-base');
@@ -122,10 +121,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         handleClose: () => {
             dispatch({ type: OPEN_DIALOG_SHOW_INFO, openDialogShowInfo: false })
         },
-        // getTransaction : () =>{
-        //     axios.get('/getdata')
-        //     .then((res)=> dispatch({ type: SAVE_TRANSACTION, res: res.data }))
-        // }
+
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Dialog_CreateAccount);
