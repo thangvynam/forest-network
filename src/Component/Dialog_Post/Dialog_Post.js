@@ -11,6 +11,7 @@ import axios from 'axios';
 import { OPEN_DIALOG_POST } from '../../Constant/actionTypes';
 import * as transaction from "../../tx"
 const {Keypair} = require('stellar-base');
+const CryptoJS = require("crypto-js")
 class Dialog_Post extends Component {
     render() {
         return (
@@ -156,7 +157,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         sendPost :()=>{
             if(content !== ''){
-                const secret_key = sessionStorage.getItem("secret_key")
+                var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+                const secret_key = bytes.toString(CryptoJS.enc.Utf8)
                 const public_key = Keypair.fromSecret(secret_key).publicKey(); 
                 axios.post('/post',{public_key, content}).then(res => {
                     let tx = res.data

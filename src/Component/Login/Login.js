@@ -5,7 +5,7 @@ import { Redirect } from 'react-router';
 import { DO_LOGIN } from '../../Constant/actionTypes';
 import { connect } from 'react-redux';
 const { Keypair } = require('stellar-base');
-
+const CryptoJS = require("crypto-js")
 class Login extends Component {
   render() {
     if(this.props.loginReducer.isLogin === true){
@@ -55,11 +55,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       try {
         const key = Keypair.fromSecret(secret_key)
         const public_key = key.publicKey()
-        sessionStorage.setItem('secret_key', secret_key)
+        var ciphertext = CryptoJS.AES.encrypt(secret_key, 'CNM2018');  
+        sessionStorage.setItem('secret_key', ciphertext.toString())
         axios.post('/login', { isLogin: true, public_key })
-        dispatch({ type: DO_LOGIN, isLogin: true, public_key, secret_key })
+        dispatch({ type: DO_LOGIN, isLogin: true, public_key })
       } catch (error) {
-        alert("Invalid Secret Key")
+        alert(error)
       }
 
     },
