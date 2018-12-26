@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Comment from '../Comment/Comment'
 import axios from 'axios';
+import * as transaction from "../../tx"
+import {SAVE_COMMENT} from "../../Constant/actionTypes"
+const {Keypair} = require('stellar-base');
+const CryptoJS = require("crypto-js")
 class DetailTweet extends Component {
     constructor(props) {
         super(props);
@@ -167,7 +171,7 @@ class DetailTweet extends Component {
                     </div>
                     <div className="inline-reply-tweetbox-container">
                         <div className="inline-reply-tweetbox swift">
-                            <form className="t1-form tweet-form condensed is-reply" method="post" target="tweet-post-iframe" action="//upload.twitter.com/i/tweet/create_with_media.iframe" encType="multipart/form-data" data-poll-composer-rows={3} data-previous-status-id-in-thread={1068905065455316992}>
+                            <form className="t1-form tweet-form condensed is-reply" id="form-cmt" method="post" target="tweet-post-iframe" action="//upload.twitter.com/i/tweet/create_with_media.iframe" encType="multipart/form-data" data-poll-composer-rows={3} data-previous-status-id-in-thread={1068905065455316992}>
                                 <div className="reply-users" />
                                 <div className="tweet-content">
                                     <img className="inline-reply-user-image avatar size32" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png" alt="Nam Thang" />
@@ -204,7 +208,6 @@ class DetailTweet extends Component {
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
-    let comment = '';
     return {
         checkPayment : () =>{
             if(ownProps.element.operation == "payment"){
@@ -217,11 +220,26 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }
         },
         handleInput :(event) =>{
-            comment = event.target.value; 
+            dispatch({type: SAVE_COMMENT, comment: event.target.value})
         },
         handleKeyPress:(event) =>{
             if (event.key === 'Enter') {
-                alert(comment)
+                let height = ownProps.element.height
+                var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+                const secret_key = bytes.toString(CryptoJS.enc.Utf8)
+                const public_key = Keypair.fromSecret(secret_key).publicKey();     
+                console.log(ownProps.detailTweetReducer.comment);
+                            
+                axios.post('/comment',{public_key, height, content: ownProps.detailTweetReducer.comment}).then(res => {
+                let tx = res.data
+                tx.memo = Buffer.alloc(0)
+                tx.signature = Buffer.alloc(64, 0)      
+                let buf = Buffer.from(tx.params.content)
+                tx.params.content = buf        
+                transaction.sign(tx, secret_key)
+                let txHash = '0x' + transaction.encode(tx).toString('hex')
+                // axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+            })
             }
         }
         

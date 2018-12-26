@@ -13,6 +13,7 @@ import Dialog_Post from '../Dialog_Post/Dialog_Post';
 import Dialog_Payment from '../Dialog_Payment/Dialog_Payment';
 import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 const {Keypair} = require('stellar-base');
+const CryptoJS = require("crypto-js")
 
 class NewsFeed extends Component {
     state={
@@ -30,7 +31,8 @@ class NewsFeed extends Component {
             if (res.data.isLogin) {
               this.props.savePublicKey(res.data.clientPublicKey);
               this.props.login(res.data)     
-              const secret_key = sessionStorage.getItem("secret_key")
+              var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+              const secret_key = bytes.toString(CryptoJS.enc.Utf8)
               const public_key = Keypair.fromSecret(secret_key).publicKey();
               this.getTransaction(res.data.clientPublicKey).then((res)=>{
                 this.props.saveTransactionProfile(res)

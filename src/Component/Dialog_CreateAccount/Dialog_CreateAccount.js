@@ -13,6 +13,7 @@ import { OPEN_DIALOG_SHOW_INFO } from '../../Constant/actionTypes';
 import * as transaction from "../../tx"
 var Buffer = require('buffer/').Buffer
 const {Keypair} = require('stellar-base');
+const CryptoJS = require("crypto-js")
 
 class Dialog_CreateAccount extends Component {
     render() {
@@ -105,7 +106,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             const key = Keypair.random();
             const createdPublicKey = key.publicKey();
             const creadtedSecretKey = key.secret();
-            const secret_key = sessionStorage.getItem("secret_key")
+            var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+            const secret_key = bytes.toString(CryptoJS.enc.Utf8)
             const public_key = Keypair.fromSecret(secret_key).publicKey();     
             axios.post('/create_account',{public_key, createdPublicKey}).then(res => {
                                         let tx = res.data

@@ -16,11 +16,13 @@ import { OPEN_DIALOG_FOLLOWER, STORE_IMAGE } from '../../Constant/actionTypes';
 import Follow from '../Follow/Follow';
 import * as transaction from "../../tx"
 const {Keypair} = require('stellar-base');
+const CryptoJS = require("crypto-js")
 
 class CoverImage extends Component {
 
     componentDidMount(){
-        const secret_key = sessionStorage.getItem("secret_key")
+        var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+        const secret_key = bytes.toString(CryptoJS.enc.Utf8)
         const public_key = Keypair.fromSecret(secret_key).publicKey(); 
         axios.post('/getImage', {public_key})
         .then((res)=> {
@@ -246,7 +248,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             followKey = event.target.value;
         },
         save: () =>{
-            const secret_key = sessionStorage.getItem("secret_key")
+            var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+            const secret_key = bytes.toString(CryptoJS.enc.Utf8)
             const public_key = Keypair.fromSecret(secret_key).publicKey(); 
             axios.post('/update_name',{public_key, name}).then(res => {
                 let tx = res.data
@@ -260,7 +263,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch({type:EDIT_PROFILE,name:name})
         },
         handleFollow: () =>{
-            const secret_key = sessionStorage.getItem("secret_key")
+            var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+            const secret_key = bytes.toString(CryptoJS.enc.Utf8)
             const public_key = Keypair.fromSecret(secret_key).publicKey(); 
             axios.post('/follow',{public_key, followKey}).then(res => {
                 let tx = res.data

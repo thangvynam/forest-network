@@ -11,6 +11,7 @@ import axios from 'axios';
 import * as transaction from "../../tx"
 import { OPEN_DIALOG_PAYMENT } from '../../Constant/actionTypes';
 const {Keypair} = require('stellar-base');
+const CryptoJS = require("crypto-js")
 class Dialog_Payment extends Component {
     render() {
         return (
@@ -66,13 +67,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             amount = event.target.value;
         },
         send : () =>{
-            const secret_key = sessionStorage.getItem("secret_key")
+            var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+            const secret_key = bytes.toString(CryptoJS.enc.Utf8)
             const public_key = Keypair.fromSecret(secret_key).publicKey(); 
             axios.post('/payment',{public_key, address, amount}).then(res => {
                 let tx = res.data
                 tx.memo = Buffer.alloc(0)
                 tx.signature = Buffer.alloc(64, 0)
-                transaction.sign(tx, secret_key) 
+                transaction.sign(tx, secret_key)
                 let txHash = '0x' + transaction.encode(tx).toString('hex')
                 axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
             })

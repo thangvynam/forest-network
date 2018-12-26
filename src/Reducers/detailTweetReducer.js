@@ -1,6 +1,7 @@
 import {GET_COMMENT} from '../Constant/actionTypes'
 import {EDIT_PROFILE,UPDATE_REAL_TIME,SAVE_TRANSACTION_NEWSFEED} from '../Constant/actionTypes'
-import {SAVE_TRANSACTION, STORE_BANDWIDTH,SAVE_PUBLIC_KEY} from '../Constant/actionTypes'
+import {SAVE_TRANSACTION, STORE_BANDWIDTH,SAVE_PUBLIC_KEY,SAVE_COMMENT} from '../Constant/actionTypes'
+
 
 const detailTweetInitialState = {
     name : '',
@@ -10,8 +11,8 @@ const detailTweetInitialState = {
     update : true,
     public_key: '',
     tweet : [],
-    tweetNewsfeed : []
-    
+    tweetNewsfeed : [],
+    comment: '',
 }
 const detailTweetReducer = (state = detailTweetInitialState, action) => {
     switch (action.type) {
@@ -25,6 +26,8 @@ const detailTweetReducer = (state = detailTweetInitialState, action) => {
             return {...state,update:action.update}
         case SAVE_PUBLIC_KEY:
             return {...state,public_key:action.public_key}
+        case SAVE_COMMENT:
+            return {...state, comment: action.comment}
         case SAVE_TRANSACTION:{
             let str = '';
             let firstName = 0;

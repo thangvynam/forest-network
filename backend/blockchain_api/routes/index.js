@@ -29,6 +29,7 @@ router.post("/getdata", function (req, res, next) {
       data.result.txs.map(tx => {
         let buffer = new Buffer.from(tx.tx, "base64");
         let decodedData = v1.decode(buffer);
+        decodedData.height = tx.height;   
         result.push(decodedData);
       });
     })
@@ -204,7 +205,6 @@ router.post("/update_name", function (req, res) {
 });
 // secret key test SDYBQ4Z2NAQH3K4WEBUWQNO6WQZN7QH3IEP4TFMN6FWWWO4PT7AFPQRJ
 router.get("/update_picture", function (req, res) {
-  const secret_key = 'SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y'
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
   let data = [];
   let count = 0
@@ -236,15 +236,15 @@ router.get("/update_picture", function (req, res) {
         if (err) throw err;
         tx.sequence = count + 1
         tx.params.value = data
-        v1.sign(tx, secret_key);
-        let txHash = v1.encode(tx).toString('base64')
+        // v1.sign(tx, secret_key);
+        // let txHash = v1.encode(tx).toString('base64')
 
-        axios.post("https://komodo.forest.network/", {
-          "jsonrpc": "2.0",
-          "id": 1,
-          "method": "broadcast_tx_commit",
-          "params": [`${txHash}`]
-        })
+        // axios.post("https://komodo.forest.network/", {
+        //   "jsonrpc": "2.0",
+        //   "id": 1,
+        //   "method": "broadcast_tx_commit",
+        //   "params": [`${txHash}`]
+        // })
       });
     })
 
@@ -466,9 +466,6 @@ router.post("/comment", function (req, res) {
     tx.sequence = count + 1;
     tx.params.object = hash
     tx.params.content = v1.PlainTextContent.encode(text)
-    // v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y")
-    // let txHash = '0x' + v1.encode(tx).toString('hex')
-    // axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     res.send(tx)
   })
 });
@@ -504,15 +501,13 @@ router.post("/react", function (req, res) {
     }
     tx.sequence = count + 1;
     tx.params.object = hash
-    tx.params.content = v1.ReactContent.encode(react)
-    // v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y") 
-    // let txHash = '0x' + v1.encode(tx).toString('hex')
-    // axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})  
+    tx.params.content = v1.ReactContent.encode(react) 
     res.send(tx)
   })
 });
 
-router.post("/get_tx", function (req, res) {
+
+router.post("/get_height", function (req, res) {
   let param = req.body
   let data = []
   let tempTx = {}
