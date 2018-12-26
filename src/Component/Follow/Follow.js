@@ -10,6 +10,7 @@ import { OPEN_DIALOG_FOLLOWING } from '../../Constant/actionTypes';
 import { OPEN_DIALOG_FOLLOWER, STORE_FOLLOW } from '../../Constant/actionTypes';
 import axios from 'axios';
 import { Keypair } from 'stellar-base';
+const CryptoJS = require("crypto-js")
 
 class Follow extends Component {
     state={
@@ -17,7 +18,8 @@ class Follow extends Component {
       }
     
     componentDidMount(){
-        const secret_key = sessionStorage.getItem("secret_key")
+        var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
+        const secret_key = bytes.toString(CryptoJS.enc.Utf8)
         const key = Keypair.fromSecret(secret_key)
         const public_key = key.publicKey()
         let name = []
