@@ -9,16 +9,23 @@ class DetailTweet extends Component {
             content : ''
         };
         this.renderPost = this.renderPost.bind(this);
+        this.renderUpdateName = this.renderUpdateName.bind(this);
     }
     renderPost() {
-       
         if(this.props.element.operation == "post" ){
             axios.post('/get_content',{public_key:this.props.element.account, sequence: this.props.element.sequence}
                 ).then(res => {
                     this.setState({content:res.data});
                 })                    
         }
-      
+    }
+    renderUpdateName() {
+        if(this.props.element.operation == "update_account" && this.props.element.params.key == "name" ){
+            let json = JSON.stringify(this.props.element.params.value.data)
+            let buffer = Buffer.from(JSON.parse(json));
+            let newName = buffer.toString('utf8');
+            return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>New name :  </b> {newName}</p>)    
+        }
     }
     render() {
         return (     
@@ -42,6 +49,7 @@ class DetailTweet extends Component {
                                 {this.props.renderNotPostAndNotUpdate()}
                                 {this.props.checkPayment()}
                                 {this.renderPost()}
+                                {this.renderUpdateName()}
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Version : </b> {this.props.element.version}</p>
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>Sequence : </b> {this.props.element.sequence}</p>
                                 <p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}>
@@ -177,33 +185,13 @@ class DetailTweet extends Component {
                                                 </div>
                                             </div>
                                             <div className="RichEditor-scrollContainer u-borderRadiusInherit">
-                                                <div aria-labelledby="tweet-box-reply-to-1068905065455316992-label" name="tweet" id="tweet-box-reply-to-1068905065455316992" className="tweet-box rich-editor is-showPlaceholder" contentEditable="true" spellCheck="true" role="textbox" aria-multiline="true" data-placeholder-default="What’s happening?" data-placeholder-poll-composer-on="Ask a question..." data-placeholder-reply="Add another Tweet" dir="ltr" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-dropdown-10"><div><br /></div></div>
-                                                <div className="RichEditor-pictographs" aria-hidden="true" />
-                                            </div>
-                                            <div className="RichEditor-leftItems RichEditor-bottomItems">
-                                                <div className="inline-geo-picker geo-picker dropdown">
-                                                    <button className="js-geo-search-trigger geo-picker-btn" type="button" data-delay={150}>
-                                                        <span className="Icon Icon--geo Icon--small" />
-                                                        <span className="geo-status" />
-                                                    </button>
-                                                    <span className="dropdown-container dropdown-menu" />
-                                                </div>
-                                            </div>
-                                            <div className="RichEditor-rightItems RichEditor-bottomItems">
-                                                <div className="js-character-counter">
-                                                    <div className="js-countdown-counter tweet-counter CountdownCounter" />
-                                                    <svg className="RadialCounter js-radial-counter" height={20} width={20}>
-                                                        <style dangerouslySetInnerHTML={{ __html: "\n    /* Global svg style overrides the overflow. Added svg for specificity */\n    svg.RadialCounter {\n      margin-bottom: -4px;\n      overflow: visible;\n      transform: rotate(-90deg);\n    }\n\n    .RadialCounter--safe {\n      stroke: #1da1f2;\n    }\n\n    .RadialCounter--warn {\n      stroke: #ffad1f;\n    }\n\n    .RadialCounter--danger {\n      stroke: #e0245e;\n    }\n\n    .RadialCounter-progressUnderlay {\n      stroke: #ccd6dd;\n    }\n\n    @keyframes RadialCounterPulse {\n      0% { stroke-width:2 }\n      50% { stroke-width: 4; }\n      100% { stroke-width: 2; }\n    }\n\n    .RadialCounter--danger.RadialCounter--pulse,\n    .RadialCounter--warn.RadialCounter--pulse {\n      animation: RadialCounterPulse 0.3s ease-in-out;\n      animation-iteration-count: 1;\n    }\n  " }} />
-                                                        <circle className="RadialCounter-progressUnderlay" cx="50%" cy="50%" r={8} fill="none" strokeWidth={1} />
-                                                        <circle className="js-progress-circle RadialCounter--safe" cx="50%" cy="50%" r={8} fill="none" strokeWidth={2} style={{ strokeDashoffset: '50.2655', strokeDasharray: '50.2655' }}>
-                                                        </circle>
-                                                    </svg>
-                                                </div>
+                                                <textarea aria-labelledby="Tweetstorm-tweet-box-0-label Tweetstorm-tweet-box-0-text-label" name="tweet" className="tweet-box rich-editor is-showPlaceholder" contentEditable="true" spellCheck="true" role="textbox" aria-multiline="true"  data-placeholder-poll-composer-on="Ask a question..."  dir="ltr" aria-autocomplete="list" 
+                                                    aria-expanded="false" aria-owns="typeahead-dropdown-6" style={{width:"100%"}}  placeholder="Write a comment..."  onChange={(event) => this.props.handleInput(event)} onKeyPress={(event) => this.props.handleKeyPress(event)} />
                                             </div>
                                         </div>
                                         <div className="RichEditor-mozillaCursorWorkaround">&nbsp;</div>
                                     </div>
-                                    <textarea aria-hidden="true" className="tweet-box-shadow hidden" name="status" defaultValue={""} />
+                                
                                 </div>
                                 <div style={{ position: 'absolute', visibility: 'hidden' }}><div><br /></div></div></form>
                         </div>
@@ -216,6 +204,7 @@ class DetailTweet extends Component {
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
+    let comment = '';
     return {
         checkPayment : () =>{
             if(ownProps.element.operation == "payment"){
@@ -225,6 +214,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         renderNotPostAndNotUpdate : () =>{
             if(ownProps.element.operation == "create_account" || ownProps.element.operation == "payment"){
                 return (<p className=" TweetTextSize--jumbo js-tweet-text tweet-text" lang="en" data-aria-label-part={0}><b>To : </b> {ownProps.element.params.address}</p>)
+            }
+        },
+        handleInput :(event) =>{
+            comment = event.target.value; 
+        },
+        handleKeyPress:(event) =>{
+            if (event.key === 'Enter') {
+                alert(comment)
             }
         }
         

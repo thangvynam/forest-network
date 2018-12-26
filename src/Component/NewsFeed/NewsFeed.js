@@ -29,27 +29,26 @@ class NewsFeed extends Component {
           .then((res) => {
             if (res.data.isLogin) {
               this.props.savePublicKey(res.data.clientPublicKey);
-              this.props.login(res.data)         
+              this.props.login(res.data)     
+              const secret_key = sessionStorage.getItem("secret_key")
+              const public_key = Keypair.fromSecret(secret_key).publicKey();
+              axios.post('/getImage', {
+                  public_key
+                })
+                .then((res) => {
+                  let src = 'data:image/jpeg;base64,' + res.data;
+                  this.props.saveImg(src)
+                })
+              axios.post("/getFollow", {
+                public_key
+              }).then(res => {
+                this.props.storeFollow(res.data)
+              })
+              this.getTransaction().then((res) => {
+                this.props.saveTransaction(res)
+              })    
             }
           })
-        const secret_key = sessionStorage.getItem("secret_key")
-        const public_key = Keypair.fromSecret(secret_key).publicKey();
-        axios.post('/getImage', {
-            public_key
-          })
-          .then((res) => {
-            let src = 'data:image/jpeg;base64,' + res.data;
-            this.props.saveImg(src)
-          })
-        axios.post("/getFollow", {
-          public_key
-        }).then(res => {
-          this.props.storeFollow(res.data)
-        })
-
-        this.getTransaction().then((res) => {
-          this.props.saveTransaction(res)
-        })
     }
     render() {
         if(this.props.loginReducer.isLogin === false){
@@ -68,7 +67,7 @@ class NewsFeed extends Component {
                               <div className="DashboardProfileCard-avatarContainer">
                                   <div id="choose-photo" className="controls avatar-settings inline-upload-avatar dropdown center">
                                       <a className="DashboardProfileCard-avatarLink ProfileAvatar-placeholder u-inlineBlock js-nav js-tooltip profile-picture js-dropdown-toggle" href="/NamThan82223837" tabIndex={-1} aria-hidden="true" data-placement="top" data-scribe-element="profile_avatar" role="button" aria-haspopup="true" data-original-title="Add a profile photo">
-                                          <img className="DashboardProfileCard-avatarImage js-action-profile-avatar" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" alt />
+                                      <img  src={this.props.coverImageReducer.imgSrc} style={{width: '80px', height:'80px', borderRadius: '50%'}} />
                                       </a>
                                   </div>
                               </div>
