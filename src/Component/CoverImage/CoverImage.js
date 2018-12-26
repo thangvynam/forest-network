@@ -96,13 +96,7 @@ class CoverImage extends Component {
                                                                 <span className="ProfileNav-value" data-is-compact="false">{this.props.followReducer.followList.length}</span>
                                                             </a>
                                                         </li>
-                                                        <li className="ProfileNav-item ProfileNav-item--following" data-more-item=".ProfileNav-dropdownItem--userMoments" onClick={this.props.openDialogFollower}>
-                                                            <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip  js-nav u-textUserColor" title="0 Moments" data-nav="user_moments" href="/NamThan82223837/moments">
-                                                                <span className="ProfileNav-label" aria-hidden="true">Followers</span>
-                                                                <span className="u-hiddenVisually">Followers</span>
-                                                                <span className="ProfileNav-value" data-is-compact="false">1</span>
-                                                            </a>
-                                                        </li>
+                                                        
                                                         <li className="ProfileNav-item ProfileNav-item--lists" data-more-item=".ProfileNav-dropdownItem--lists">
                                                             <a className="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav u-textUserColor" data-nav="all_lists" href="/NamThan82223837/lists" data-original-title="0 Lists">
                                                                 <span className="ProfileNav-label" aria-hidden="true">Lists</span>

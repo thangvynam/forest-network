@@ -14,7 +14,7 @@ import { Keypair } from 'stellar-base';
 class Follow extends Component {
     state={
         persons:[]
-      }
+    }
     
     componentDidMount(){
         const secret_key = sessionStorage.getItem("secret_key")

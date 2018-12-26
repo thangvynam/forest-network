@@ -3,10 +3,8 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
-
-import {SAVE_TRANSACTION, STORE_FOLLOW} from '../../Constant/actionTypes';
+import {SAVE_TRANSACTION_NEWSFEED,SAVE_TRANSACTION, STORE_FOLLOW} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_CREATE_ACCOUNT,SAVE_PUBLIC_KEY } from '../../Constant/actionTypes';
-
 import { OPEN_DIALOG_POST} from '../../Constant/actionTypes';
 import { OPEN_DIALOG_PAYMENT,DO_LOGIN,STORE_IMAGE} from '../../Constant/actionTypes';
 import Nav from '../Nav/Nav';
@@ -17,14 +15,16 @@ import Dialog_CreateAccount from '../Dialog_CreateAccount/Dialog_CreateAccount';
 const {Keypair} = require('stellar-base');
 
 class NewsFeed extends Component {
-    constructor(props) {
-        super(props);
+    state={
+      followPersons:[]
     }
-    getTransaction = () =>
-        axios.post('/getdata', { public_key: this.props.loginReducer.public_key })
+    
+    getTransaction = (public_key) =>
+        axios.post('/getdata', { public_key: public_key })
             .then((res) => res.data)
 
     componentDidMount() {
+        let finalList = [];
         axios.get('/login')
           .then((res) => {
             if (res.data.isLogin) {
@@ -32,21 +32,39 @@ class NewsFeed extends Component {
               this.props.login(res.data)     
               const secret_key = sessionStorage.getItem("secret_key")
               const public_key = Keypair.fromSecret(secret_key).publicKey();
-              axios.post('/getImage', {
-                  public_key
-                })
-                .then((res) => {
-                  let src = 'data:image/jpeg;base64,' + res.data;
-                  this.props.saveImg(src)
-                })
-              axios.post("/getFollow", {
-                public_key
-              }).then(res => {
-                this.props.storeFollow(res.data)
+              this.getTransaction(res.data.clientPublicKey).then((res)=>{
+                this.props.saveTransactionProfile(res)
               })
-              this.getTransaction().then((res) => {
-                this.props.saveTransaction(res)
-              })    
+              axios.post('/getImage', {public_key})
+                   .then((res) => {
+                      let src = 'data:image/jpeg;base64,' + res.data;
+                      this.props.saveImg(src)
+                    })
+              axios.post("/getFollow", {public_key})
+                   .then(res => {
+                      this.props.storeFollow(res.data)
+                    })
+                    .then(()=>{
+                      let tempList = []
+                      this.props.followReducer.followList.map((element,index)=>{
+                        this.getTransaction(element)
+                            .then((res) => {
+                              tempList.push(res);
+                              this.setState({followPersons:tempList})
+                            })
+                            .then(()=>{          
+                                let reverseList = this.state.followPersons[this.state.followPersons.length-1];
+                                for(let j = 0 ;j< reverseList.length;j++){
+                                  if(j == 20){// track follow 20 the lastest post 
+                                    break;
+                                  } 
+                                  finalList.push(reverseList[j])
+                                }
+                                this.props.saveTransaction(finalList)
+                            })  
+                      })
+                      
+                    })
             }
           })
     }
@@ -54,6 +72,7 @@ class NewsFeed extends Component {
         if(this.props.loginReducer.isLogin === false){
             return (<Redirect to="/login"/>)
         }
+        //alert(this.props.detailTweetReducer.name)
         if(this.props.detailTweetReducer.update){
           this.getTransaction()
           return (
@@ -87,12 +106,7 @@ class NewsFeed extends Component {
                                   </li><li className="ProfileCardStats-stat Arrange-sizeFit">
                                           <a className="ProfileCardStats-statLink u-textUserColor u-linkClean u-block js-nav js-tooltip" href="/NamThan82223837/following" data-element-term="following_stats" data-original-title="1 Following">
                                               <span className="ProfileCardStats-statLabel u-block">Following</span>
-                                              <span className="ProfileCardStats-statValue" data-count={1} data-is-compact="false">1</span>
-                                          </a>
-                                      </li><li className="ProfileCardStats-stat Arrange-sizeFit">
-                                          <a className="ProfileCardStats-statLink u-textUserColor u-linkClean u-block js-nav js-tooltip" href="/NamThan82223837/followers" data-element-term="follower_stats" data-original-title="1 Follower">
-                                              <span className="ProfileCardStats-statLabel u-block">Followers</span>
-                                              <span className="ProfileCardStats-statValue" data-count={1} data-is-compact="false">1</span>
+                                              <span className="ProfileCardStats-statValue" data-count={1} data-is-compact="false">{this.props.followReducer.followList.length}</span>
                                           </a>
                                       </li>
                                   </ul>
@@ -132,7 +146,7 @@ class NewsFeed extends Component {
                         <div className="stream">
                           <ol className="stream-items js-navigable-stream" id="stream-items-id">
                             {
-                              this.props.detailTweetReducer.tweet.map((element,index)=>(
+                              this.props.detailTweetReducer.tweetNewsfeed.map((element,index)=>(
                                 <Tweets operation={element.operation} version={element.version} sequence={element.sequence} element={element} />
                               ))
                             }
@@ -266,7 +280,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         saveTransaction: (res) => {
             console.log(res)
-            dispatch({ type: SAVE_TRANSACTION, res: res })
+            dispatch({ type: SAVE_TRANSACTION_NEWSFEED, res: res })
         },
         openDialogCreateAccount : ()=>{
 
@@ -291,6 +305,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         storeFollow: (follow) => {
           dispatch({type: STORE_FOLLOW, followList: follow})
+        },
+        saveTransactionProfile:(res)=>{
+          dispatch({ type: SAVE_TRANSACTION, res: res })
         }
         
     }

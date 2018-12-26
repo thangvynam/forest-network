@@ -39,11 +39,9 @@ class Profile extends Component {
                 this.props.login(res.data)         
             }})
           .then(()=>{
-            if(this.props.detailTweetReducer.tweet.length == 0){
               this.getTransaction().then((res)=>{
                 this.props.saveTransaction(res)
               })
-            }
           })
           axios.post('/bandwidth', {public_key: this.props.loginReducer.public_key}).then(res => {
             this.props.saveBandwidth(res.data)

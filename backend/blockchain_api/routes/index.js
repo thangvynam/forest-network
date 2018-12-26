@@ -512,7 +512,7 @@ router.post("/react", function (req, res) {
   })
 });
 
-router.post("/getdata", function (req, res) {
+router.post("/get_tx", function (req, res) {
   let param = req.body
   let data = []
   let tempTx = {}
