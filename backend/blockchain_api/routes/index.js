@@ -61,10 +61,10 @@ router.post("/create_account", function (req, res) {
     )
     .then(function (response) {
       data = response.data;
-      data.result.txs.map(tx => {      
-        let buffer = new Buffer.from(tx.tx, "base64");     
+      data.result.txs.map(tx => {
+        let buffer = new Buffer.from(tx.tx, "base64");
         let decodedData = v1.decode(buffer);
-        
+
         if (decodedData.account === param.public_key) {
           count++;
         }
@@ -254,7 +254,7 @@ router.get("/update_picture", function (req, res) {
 
 router.post('/login', function (req, res, next) {
   isLogin = req.body.isLogin;
-  if(isLogin)
+  if (isLogin)
     clientPublicKey = req.body.public_key
   else
     clientPublicKey = ''
@@ -297,8 +297,7 @@ router.post("/follow", function (req, res) {
         if (decodedData.params.key === 'followings') {
           try {
             followArr = v1.Followings.decode(decodedData.params.value).addresses
-          } catch (error) {
-          }
+          } catch (error) {}
         }
       })
     })
@@ -306,7 +305,7 @@ router.post("/follow", function (req, res) {
       var buf = param.followKey
       var arr = followArr;
       console.log(arr);
-      
+
       arr.push(base32.decode(buf))
       var add = {
         addresses: arr
@@ -315,7 +314,7 @@ router.post("/follow", function (req, res) {
       tx.params.value = v1.Followings.encode(add);
       res.send(tx);
     })
-  
+
 });
 
 
@@ -380,7 +379,6 @@ router.post("/getImage", function (req, res) {
       data = response.data;
       data.result.txs.map(tx => {
         let buffer = new Buffer.from(tx.tx, "base64");
-        lastBandwidth = Buffer.byteLength(buffer)
         let decodedData = v1.decode(buffer);
         if (decodedData.operation === 'update_account' && decodedData.params.key === 'picture') {
           value = decodedData.params.value;
@@ -404,7 +402,6 @@ router.post("/getFollow", function (req, res) {
       data = response.data;
       data.result.txs.map(tx => {
         let buffer = new Buffer.from(tx.tx, "base64");
-        lastBandwidth = Buffer.byteLength(buffer)
         let decodedData = v1.decode(buffer);
         if (decodedData.operation === 'update_account' && decodedData.params.key === 'followings') {
           try {
@@ -427,7 +424,6 @@ router.post("/getName", function (req, res) {
     data2 = res.data;
     data2.result.txs.map(tx => {
       let buffer = new Buffer.from(tx.tx, "base64");
-      lastBandwidth = Buffer.byteLength(buffer)
       let decodedData = v1.decode(buffer);
       if (decodedData.operation === 'update_account' && decodedData.params.key === 'name') {
         name = decodedData.params.value.toString();
@@ -457,11 +453,10 @@ router.post("/comment", function (req, res) {
   axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`).then(function (res) {
     data = res.data;
     data.result.txs.map(tx => {
-        let buffer = new Buffer.from(tx.tx, "base64");
-        lastBandwidth = Buffer.byteLength(buffer)
-        let decodedData = v1.decode(buffer);
-        if(decodedData.account === param.public_key) count++;
-        if(tx.height === param.height) hash = tx.hash;
+      let buffer = new Buffer.from(tx.tx, "base64");
+      let decodedData = v1.decode(buffer);
+      if (decodedData.account === param.public_key) count++;
+      if (tx.height === param.height) hash = tx.hash;
     })
   }).then(() => {
     var text = {
@@ -471,9 +466,9 @@ router.post("/comment", function (req, res) {
     tx.sequence = count + 1;
     tx.params.object = hash
     tx.params.content = v1.PlainTextContent.encode(text)
-    v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y") 
+    v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y")
     let txHash = '0x' + v1.encode(tx).toString('hex')
-    axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})  
+    axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
     res.send(tx)
   })
 });
@@ -497,11 +492,10 @@ router.post("/react", function (req, res) {
   axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`).then(function (res) {
     data = res.data;
     data.result.txs.map(tx => {
-        let buffer = new Buffer.from(tx.tx, "base64");
-        lastBandwidth = Buffer.byteLength(buffer)
-        let decodedData = v1.decode(buffer);
-        if(decodedData.account === param.public_key) count++;
-        if(tx.height === param.height) hash = tx.hash;
+      let buffer = new Buffer.from(tx.tx, "base64");
+      let decodedData = v1.decode(buffer);
+      if (decodedData.account === param.public_key) count++;
+      if (tx.height === param.height) hash = tx.hash;
     })
   }).then(() => {
     var react = {
@@ -511,10 +505,32 @@ router.post("/react", function (req, res) {
     tx.sequence = count + 1;
     tx.params.object = hash
     tx.params.content = v1.ReactContent.encode(react)
-    v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y") 
-    let txHash = '0x' + v1.encode(tx).toString('hex')
-    axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})  
+    // v1.sign(tx, "SC3JWTRTJM27OKO3V6XHRLN2CKJYNS3KIGT7E343ZAD2RQXFKYQSCY7Y") 
+    // let txHash = '0x' + v1.encode(tx).toString('hex')
+    // axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})  
     res.send(tx)
+  })
+});
+
+router.post("/get_tx", function (req, res) {
+  let param = req.body
+  let data = []
+  let tempTx = {}
+  let block = []
+  axios.get(`https://komodo.forest.network/tx_search?query=%22account=%27${param.public_key}%27%22&per_page=100`).then(function (res) {
+    data = res.data;
+    data.result.txs.map(tx => {
+      let buffer = new Buffer.from(tx.tx, "base64");
+      let decodedData = v1.decode(buffer);
+      tempTx = {
+        height: tx.height,
+        tx: decodedData
+      }
+      block.push(tempTx)
+    })     
+  }).then(() => {
+    console.log(block);
+    res.send("abc")
   })
 });
 
