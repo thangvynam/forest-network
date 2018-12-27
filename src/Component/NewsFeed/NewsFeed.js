@@ -19,12 +19,15 @@ class NewsFeed extends Component {
     state={
       followPersons:[]
     }
-    
+    constructor(props) {
+      super(props);
+    }
     getTransaction = (public_key) =>
         axios.post('/getdata', { public_key: public_key })
             .then((res) => res.data)
 
     componentDidMount() {
+        this.props.refreshNewsFeed();
         let finalList = [];
         axios.get('/login')
           .then((res) => {
@@ -308,6 +311,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         saveTransactionProfile:(res)=>{
           dispatch({ type: SAVE_TRANSACTION, res: res })
+        },
+        refreshNewsFeed:()=>{
+          dispatch({ type: SAVE_TRANSACTION_NEWSFEED, res: [] })
         }
         
     }

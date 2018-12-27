@@ -58,7 +58,6 @@ function encode(tx) {
   switch (tx.operation) {
     case 'create_account':
     const temp = base32.decode(tx.params.address)
-    
       params = CreateAccountParams.encode({
         ...tx.params,
         address: Buffer.from(JSON.stringify(temp)),
