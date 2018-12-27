@@ -203,7 +203,6 @@ router.post("/update_name", function (req, res) {
       res.send(tx)
     })
 });
-// secret key test SDYBQ4Z2NAQH3K4WEBUWQNO6WQZN7QH3IEP4TFMN6FWWWO4PT7AFPQRJ
 router.get("/update_picture", function (req, res) {
   const public_key = 'GCPMFCBY3FMI4LCRQGVF6T5RJHYUQ5JKJKBW5Q6RUT5N7KPKGUYHP6CD'
   let data = [];
@@ -304,8 +303,6 @@ router.post("/follow", function (req, res) {
     .then(() => {
       var buf = param.followKey
       var arr = followArr;
-      console.log(arr);
-
       arr.push(base32.decode(buf))
       var add = {
         addresses: arr
@@ -335,7 +332,6 @@ router.post("/bandwidth", function (req, res) {
     .then(function (response) {
       data = response.data;
       data.result.txs.map(tx => {
-        // console.log(tx);
         let buffer = new Buffer.from(tx.tx, "base64");
         lastBandwidth = Buffer.byteLength(buffer)
         let decodedData = v1.decode(buffer);
@@ -358,9 +354,6 @@ router.post("/bandwidth", function (req, res) {
           let seconds = bandwidthTime.getTime() / 1000;
           let usedBandwidth = Math.ceil(Math.max(0, (86400 - seconds) / 86400) * lastBandwidth)
           bandwidth = balance * oxy / 9007199254740991 - usedBandwidth
-          console.log(bandwidthTime);
-          console.log(balance);
-          console.log(Math.round(bandwidth));
           let result = Math.round(bandwidth).toString()
           res.send(result);
         })
@@ -525,7 +518,6 @@ router.post("/get_height", function (req, res) {
       block.push(tempTx)
     })     
   }).then(() => {
-    console.log(block);
     res.send(block)
   })
 });

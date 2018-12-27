@@ -284,7 +284,6 @@ class NewsFeed extends Component {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         saveTransaction: (res) => {
-            //console.log(res)
             dispatch({ type: SAVE_TRANSACTION_NEWSFEED, res: res })
         },
         openDialogCreateAccount : ()=>{
@@ -298,7 +297,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           dispatch({ type: OPEN_DIALOG_PAYMENT, open: true })
         },
         login: (res) => {
-            //console.log(res);
             dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
         },
         savePublicKey: (public_key) =>{

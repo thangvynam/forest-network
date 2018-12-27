@@ -60,7 +60,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         axios.post('/login', { isLogin: true, public_key })
         dispatch({ type: DO_LOGIN, isLogin: true, public_key })
       } catch (error) {
-        alert(error)
+        alert("Invalid secret key")
       }
 
     },

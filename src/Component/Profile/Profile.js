@@ -54,11 +54,8 @@ class Profile extends Component {
 
   handlePreviewImg = (event) =>{
     const selectedFile = document.getElementsByTagName('input');
-    console.log(selectedFile)
-    // console.log(event)
     // let files = event.target.files;
     // let imageUrl = '';
-    // console.log(files)
     // if(files.length!=0){
     //     imageUrl=files[0].result;
     //     alert(imageUrl)
@@ -106,7 +103,7 @@ class Profile extends Component {
                         <span className="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-joinDateText js-tooltip u-dir" dir="ltr" data-original-title="7:19 PM - 30 Nov 2018">{this.props.detailTweetReducer.bandwidth} OXY</span>
                       </div>
-                      <input onClick={this.handleFileSelect}  onBlur={(event) => this.handlePreviewImg(event) }/>Select files
+                      {/* <input onClick={this.handleFileSelect}  onBlur={(event) => this.handlePreviewImg(event) }/>Select files */}
                       <div className="ProfileHeaderCard-birthdate u-hidden">
                         <span className="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation" />
                         <span className="ProfileHeaderCard-birthdateText u-dir" dir="ltr">
@@ -292,7 +289,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     saveTransaction: (res) => {
-      console.log(res)
       dispatch({ type: SAVE_TRANSACTION, res: res })
     },
     openDialogCreateAccount : ()=>{
@@ -308,7 +304,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch({type: STORE_BANDWIDTH, bandwidth})
     },
     login: (res) => {
-      console.log(res);
       dispatch({type: DO_LOGIN, isLogin: true, public_key: res.clientPublicKey})
     }
   }
