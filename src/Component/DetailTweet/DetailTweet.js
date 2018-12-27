@@ -208,6 +208,7 @@ class DetailTweet extends Component {
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
+    let comment=""
     return {
         checkPayment : () =>{
             if(ownProps.element.operation == "payment"){
@@ -220,7 +221,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }
         },
         handleInput :(event) =>{
-            dispatch({type: SAVE_COMMENT, comment: event.target.value})
+            comment = event.target.value
         },
         handleKeyPress:(event) =>{
             if (event.key === 'Enter') {
@@ -228,9 +229,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
                 const secret_key = bytes.toString(CryptoJS.enc.Utf8)
                 const public_key = Keypair.fromSecret(secret_key).publicKey();     
-                console.log(ownProps.detailTweetReducer.comment);
                             
-                axios.post('/comment',{public_key, height, content: ownProps.detailTweetReducer.comment}).then(res => {
+                axios.post('/comment',{public_key, height, content: comment}).then(res => {
                 let tx = res.data
                 tx.memo = Buffer.alloc(0)
                 tx.signature = Buffer.alloc(64, 0)      
@@ -238,7 +238,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 tx.params.content = buf        
                 transaction.sign(tx, secret_key)
                 let txHash = '0x' + transaction.encode(tx).toString('hex')
-                // axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
+                axios.get("https://komodo.forest.network/broadcast_tx_commit?tx=" + txHash).then((response) => {})
             })
             }
         }

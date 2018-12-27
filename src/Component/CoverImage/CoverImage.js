@@ -26,8 +26,6 @@ class CoverImage extends Component {
         const public_key = Keypair.fromSecret(secret_key).publicKey(); 
         axios.post('/getImage', {public_key})
         .then((res)=> {
-            // console.log(res.data);
-            
             let src = 'data:image/jpeg;base64,' + res.data;
             this.props.saveImg(src)
         })
@@ -268,8 +266,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             const public_key = Keypair.fromSecret(secret_key).publicKey(); 
             axios.post('/follow',{public_key, followKey}).then(res => {
                 let tx = res.data
-                console.log(tx);
-                
                 tx.memo = Buffer.alloc(0)
                 tx.signature = Buffer.alloc(64, 0)
                 tx.params.value = Buffer.from(tx.params.value)
