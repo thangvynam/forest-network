@@ -228,7 +228,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 var bytes  = CryptoJS.AES.decrypt(sessionStorage.getItem("secret_key"), 'CNM2018');
                 const secret_key = bytes.toString(CryptoJS.enc.Utf8)
                 const public_key = Keypair.fromSecret(secret_key).publicKey();     
-                console.log(ownProps.detailTweetReducer.comment);
+                //console.log(ownProps.detailTweetReducer.comment);
                             
                 axios.post('/comment',{public_key, height, content: ownProps.detailTweetReducer.comment}).then(res => {
                 let tx = res.data

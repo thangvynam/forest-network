@@ -268,7 +268,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             const public_key = Keypair.fromSecret(secret_key).publicKey(); 
             axios.post('/follow',{public_key, followKey}).then(res => {
                 let tx = res.data
-                console.log(tx);
+                //console.log(tx);
                 
                 tx.memo = Buffer.alloc(0)
                 tx.signature = Buffer.alloc(64, 0)
